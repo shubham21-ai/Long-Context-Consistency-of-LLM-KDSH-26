@@ -28,8 +28,7 @@ This system checks if character backstories are consistent with the actual story
 │   ├── config.py            # Configuration and API keys
 │   ├── evaluator.py         # Consistency evaluation
 │   ├── rag.py               # RAG class implementation
-│   ├── main.py              # Main pipeline
-│   ├── test_framework.py    # Test framework
+│   ├── test_framework.py    # Main /Test framework
 │   └── requirements.txt     # Python dependencies
 │   ├── test_llm.py          # LLM testing utilities
 │   └── requirements.txt     # Python dependencies
@@ -50,27 +49,14 @@ git clone https://github.com/shubham21-ai/Long-Context-Consistency-of-LLM-KDSH-2
 cd Long-Context-Consistency-of-LLM-KDSH-26
 ```
 
-2. Install dependencies:
-```bash
-cd "Main System"
-pip install -r requirements.txt
-```
-
-3. Set up environment variables:
+2. Set up environment variables:
 Create a `.env` file in the `Main System/` directory with:
 ```
-GEMINI_API_KEY=your_gemini_api_key
 GROQ_API_KEY=your_groq_api_key
 ```
 
 ## Usage
 
-### Main Pipeline
-Run the main pipeline on sample data:
-```bash
-cd "Main System"
-python main.py
-```
 
 ### Test Framework
 Run the test framework on test.csv:
