@@ -160,12 +160,12 @@ STEP 3: COMPARE WITH BACKSTORY
 - Is there NO relevant information in the passages? → UNCERTAIN
 
 VERDICT DEFINITIONS:
-✓ CONSISTENT: Story mentions events/facts that match or support the backstory
+✓ consistent: Story mentions events/facts that match or support the backstory
   - Same character doing similar actions
   - Compatible information (even if described differently)
   - Supporting evidence for the claim
 
-✗ INCONSISTENT: Story actively contradicts the backstory
+✗  contradict: Story actively contradicts the backstory
   - Different facts (X did Y, but story says X did Z)
   - Contradictory dates, events, or relationships
   - Story explicitly denies or contradicts the claim

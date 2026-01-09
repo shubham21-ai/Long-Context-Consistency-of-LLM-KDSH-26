@@ -8,7 +8,8 @@ from config import load_groq_api_key
 os.environ['TOKENIZERS_PARALLELISM'] = 'false'
 
 # Groq API configuration
-GROQ_MODEL = "qwen/qwen3-32b"
+GROQ_MODEL = "llama-3.3-70b-versatile"
+
 
 SYSTEM_PROMPT = """You are an expert information extraction system specialized in narrative analysis and character backstory processing.
 
@@ -146,11 +147,17 @@ CRITICAL: You MUST output ONLY a valid JSON array. Do NOT include any explanator
                 print(f"  → Extracted from markdown code block", flush=True)
             
             # Remove reasoning tags if present (<think>, etc.)
-            if "<think>" in raw.lower():
-                # Find all reasoning blocks and remove them
-                raw = re.sub(r'<think>.*?</think>', '', raw, flags=re.DOTALL | re.IGNORECASE)
-                raw = raw.strip()
-                print(f"  → Removed reasoning tags", flush=True)
+            if "<think>" in raw.lower() or "okay," in raw.lower()[:100]:
+                # Strategy: Look for the first [ and last ] that contain JSON
+                # This skips reasoning text that appears before the JSON
+                json_start = raw.find('[')
+                if json_start != -1:
+                    raw = raw[json_start:]
+                    print(f"  → Removed reasoning text (skipped to first [)", flush=True)
+                else:
+                    raw = re.sub(r'<think>.*?</think>', '', raw, flags=re.DOTALL | re.IGNORECASE)
+                    raw = raw.strip()
+                    print(f"  → Removed reasoning tags", flush=True)
             
             # Handle reasoning text if present (qwen/qwen3-32b may include reasoning before JSON)
             # Strategy: Look for ALL occurrences of [ { and use the LAST one (reasoning usually comes first)

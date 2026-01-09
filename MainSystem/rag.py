@@ -1,6 +1,6 @@
 import numpy as np
 from rank_bm25 import BM25Okapi
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_text_splitters  import RecursiveCharacterTextSplitter
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_community.document_loaders import DirectoryLoader, TextLoader
 from sentence_transformers import SentenceTransformer
