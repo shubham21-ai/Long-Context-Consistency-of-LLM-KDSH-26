@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+venv/
+env/
+ENV/
+myenv/
+.venv
+
+# Environment variables
+.env
+.env.local
+.hf_token
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs and outputs
+*.log
+test_output.log
+test_results.json
+
+# Data (large files)
+# Uncomment if you don't want to commit books
+# Books/
+
+# Model cache
+*.pkl
+*.faiss
+*.npy
+embeddings/
+models/__pycache__/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp

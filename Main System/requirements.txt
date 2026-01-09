@@ -1,0 +1,12 @@
+requests
+sentence-transformers
+faiss-cpu
+tiktoken
+langchain
+langchain-google-genai
+langchain-community
+python-dotenv
+rank-bm25
+numpy
+groq
+
