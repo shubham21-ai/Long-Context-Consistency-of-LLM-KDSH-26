@@ -1,0 +1,167 @@
+================================================================================
+NARRATIVE CONSISTENCY TEST RESULTS
+Timestamp: 2026-01-10 11:31:15
+================================================================================
+
+
+================================================================================
+ROW 1
+================================================================================
+ID: 46
+Book: In Search of the Castaways
+Character: Thalcave
+Expected Label: consistent
+Backstory:
+Thalcave’s people faded as colonists advanced; his father, last of the tribal guides, knew the pampas geography and animal ways, while his mother died giving birth. Boyhood was spent roaming the plains with his father, learning to track, tame horses and steer by the stars.
+
+--------------------------------------------------------------------------------
+
+  Question [1/5]:
+  What is the status of Thalcave's people?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+He turned towards Thalcave, and, recalling a few words of Spanish,
+began a conversation with the Indian, frequently interrupted by the
+cracks of the rifle.
+
+It was not without difficulty that these two men succeeded in
+understanding each other. Glenarvan, fortunately, knew the habits of
+the red wolf. Without this knowledge he could not have interpreted the
+words and gestures of the Patagonian.
+
+Nevertheless, a quarter of an hour passed before he could give to
+Robert the meaning of Thalcave's answer. He had questioned the Indian
+concerning their situation.
+
+"And what did he answer?" inquired Robert.
+
+"He said that, cost what it may, we must hold out till daybreak. The
+aguara goes out only at night, and when morning comes he returns to
+his lair. He is the wolf of darkness, a cowardly beast that fears the
+daylight."
+
+"Well, let us defend ourselves till day."
+
+"Yes, my boy, and with our knives if we can no longer use our guns."
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Invalid json output: 
+For troubleshooting, visit: https://docs.langchain.com/oss/python/langchain/er
+
+  Question [2/5]:
+  What was the occupation of Thalcave's father?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+"You have seen him?"
+
+"No, but he is mentioned in the accounts of the Indians. He was a brave
+man."
+
+"You understand, my friends," said Paganel; "a courageous man!"
+
+"My father!" cried Robert Grant.
+
+Then, addressing Paganel:
+
+"How do you say 'It is my father,' in Spanish?" he asked.
+
+"_Es mio padre_," answered the geographer.
+
+Immediately Robert, taking Thalcave's hands, said in a sweet voice,--
+
+"_Es mio padre!_"
+
+"_Suo padre!_" replied the Patagonian, whose look brightened.
+
+He took the boy in his arms, lifted him from his horse, and gazed at
+him with the most curious sympathy. His intelligent countenance became
+suffused with a peaceful emotion.
+
+But Paganel had not finished his inquiries. Where was this prisoner?
+What was he doing? When had Thalcave heard of him? All these questions
+thronged his mind at once. He did not have to wait long for answers,
+but learnt that the European was a slave of one of the Indian tribes
+that scour the plains.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Invalid json output: 
+For troubleshooting, visit: https://docs.langchain.com/oss/python/langchain/er
+
+  Question [3/5]:
+  How did Thalcave's mother die?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+Glenarvan took his hand, and, pointing to the yacht, said,--
+
+"Come!"
+
+The Indian shook his head.
+
+"Come, my friend!" continued Glenarvan.
+
+"No," replied Thalcave, gently. "Here is Thaouka, and there are the
+Pampas!" he added, indicating with a sweep of his hand the vast expanse
+of the plains.
+
+It was clear that the Indian would never leave the prairies, where the
+bones of his fathers whitened. Glenarvan knew the strong attachment
+of these children of the desert to their native country. He therefore
+shook Thalcave's hand, and did not insist; not even when the Indian,
+smiling in his peculiar way, refused the price of his services,
+saying,--
+
+"It was done out of friendship."
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Invalid json output: 
+For troubleshooting, visit: https://docs.langchain.com/oss/python/langchain/er
+
+  Question [4/5]:
+  What did Thalcave learn from his father?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+Thalcave now began to observe with an anxious air the state of things
+around him. He frequently stopped, and rose in his stirrups. His tall
+form enabled him to survey a wide range; but, perceiving nothing that
+could enlighten him, he resumed his undeviating course. A mile farther,
+he stopped again, and, turning from the beaten track, proceeded a short
+distance, first to the north, then to the south, and then resumed his
+place at the head of the party, without saying either what he hoped or
+what he feared.
+
+These manoeuvres, many times repeated, puzzled Paganel and annoyed
+Glenarvan. The geographer was accordingly requested to interrogate
+the Indian, which he did at once. Thalcave replied that he was
+astonished to see the plain so soaked with moisture. Never within his
+recollection, since he had performed the office of guide, had his feet
+trodden a soil so saturated. Even in the season of the great rains the
+Argentine plain was always easily passed.
+  ----------------------------------------------------------------------

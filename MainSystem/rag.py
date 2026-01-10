@@ -17,12 +17,12 @@ class RAG:
         self.text_strings = []  # Store text strings for BM25
         # Set API key for langchain
         api_key = load_gemini_api_key()
-        os.environ['GOOGLE_API_KEY'] = api_key
+        os.environ['GEMINII_API_KEY'] = api_key
 
     def load_model(self):
         self.llm = ChatGoogleGenerativeAI(
             model=self.model_llm,
-            google_api_key=os.environ.get('GOOGLE_API_KEY')
+            google_api_key=os.environ.get('GEMINII_API_KEY')
         )
         # Use sentence-transformers for embeddings (free, no quota)
         self.embedding = SentenceTransformer('all-MiniLM-L6-v2')

@@ -1,433 +1,270 @@
 """
-Evaluation module for narrative consistency checking.
-
-This module handles:
-- Single evaluation: Compare retrieved answers with backstory facts
-- Decision rule: Aggregate evaluation results into final verdict
+Evaluation module for narrative consistency checking
+(FINAL – HARDENED, RAW-VISIBLE, PARSER-SAFE, TEMP=0)
 """
 
-import json
+from typing import Dict, List
+from pydantic import BaseModel
+from config import load_gemini_api_key
 import time
 import re
-from typing import Dict, List
-from config import load_groq_api_key
 
-# Groq API configuration
-GROQ_MODEL = "qwen/qwen3-32b"
+# ----------------------------
+# MODEL CONFIG
+# ----------------------------
+GEMINI_MODEL = "gemini-3-pro-preview"
 
 
-def call_groq_api(messages: List[Dict], temperature: float = 0.0, max_tokens: int = 512, 
-                  max_retries: int = 3, delay: float = 0.0, model: str = GROQ_MODEL) -> Dict:
+# ----------------------------
+# SCHEMA (SAFE DEFAULTS)
+# ----------------------------
+class EvalResult(BaseModel):
+    answer: str = "NOT_MENTIONED"
+    verdict: str = "uncertain"     # consistent | contradict | uncertain
+    confidence: float = 0.0
+    reasoning: str = "No explicit information found"
+
+
+# ----------------------------
+# JSON CLEANER (CRITICAL)
+# ----------------------------
+def clean_json(text: str) -> str:
     """
-    Helper function to call Groq API with retry logic.
-    
-    Args:
-        messages: List of message dicts with 'role' and 'content'
-        temperature: Temperature for generation
-        max_tokens: Maximum tokens to generate
-        max_retries: Maximum number of retry attempts
-        delay: Delay in seconds before making the API call (deprecated, kept for compatibility)
-        model: Model name to use
-        
-    Returns:
-        Response data as dictionary with 'choices' key compatible with existing code
+    Remove markdown, thinking tags, and junk around JSON.
     """
-    # Delay removed for speed
-    
-    # Import Groq client
-    from groq import Groq
-    
-    # Load API key from .env when needed
-    api_key = load_groq_api_key()
-    client = Groq(api_key=api_key)
-    retry_delay = 0
-    
-    for attempt in range(max_retries):
-        try:
-            completion = client.chat.completions.create(
-                model=model,
-                messages=messages,
-                temperature=temperature,
-                max_completion_tokens=max_tokens,
-                stream=False
-            )
-            
-            # Convert Groq response to OpenRouter-compatible format
-            if not completion.choices or len(completion.choices) == 0:
-                raise Exception(f"No choices in response")
-            
-            # Extract content and format as OpenRouter-compatible response
-            message = completion.choices[0].message
-            content = message.content if hasattr(message, 'content') else str(message)
-            
-            # Format as OpenRouter-compatible response
-            response_data = {
-                'choices': [{
-                    'message': {
-                        'content': content,
-                        'role': 'assistant'
-                    }
-                }],
-                'model': completion.model if hasattr(completion, 'model') else model,
-                'usage': {
-                    'prompt_tokens': completion.usage.prompt_tokens if hasattr(completion, 'usage') and hasattr(completion.usage, 'prompt_tokens') else 0,
-                    'completion_tokens': completion.usage.completion_tokens if hasattr(completion, 'usage') and hasattr(completion.usage, 'completion_tokens') else 0,
-                    'total_tokens': completion.usage.total_tokens if hasattr(completion, 'usage') and hasattr(completion.usage, 'total_tokens') else 0
-                }
-            }
-            
-            return response_data
-        except Exception as e:
-            error_str = str(e).lower()
-            if 'rate' in error_str or 'limit' in error_str or '429' in error_str:
-                if attempt < max_retries - 1:
-                    print(f"      ⚠️  Rate limit hit, retrying immediately... (attempt {attempt + 1}/{max_retries})", flush=True)
-                    continue
-            # If not a rate limit error or max retries reached, raise
-            if attempt == max_retries - 1:
-                raise
-    
-    raise Exception("Max retries reached")
+    if not text:
+        return ""
+
+    text = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL)
+    text = re.sub(r"```(?:json)?", "", text)
+    text = re.sub(r"```", "", text)
+
+    return text.strip()
 
 
+# ----------------------------
+# GEMINI CALL (RAW FIRST)
+# ----------------------------
+def call_gemini_api(
+    messages: List[Dict],
+    model: str = GEMINI_MODEL,
+    max_tokens: int = 512,
+) -> EvalResult:
 
-def evaluate_consistency(question: str, retrieved_chunks: List[str], 
-                        backstory_facts: str, character: str = "") -> Dict:  # ADDED: character parameter
-    """
-    Single evaluation: Compare retrieved answer from story chunks with backstory facts.
-    
-    This is the ONLY evaluation step - it:
-    1. Extracts answer from retrieved story chunks
-    2. Compares it with backstory facts
-    3. Returns verdict (CONSISTENT, INCONSISTENT, or UNCERTAIN)
-    
-    Args:
-        question: Question about the backstory fact
-        retrieved_chunks: Retrieved text chunks from the story
-        backstory_facts: The relevant backstory facts/claim
-        character: Character name to focus on (ADDED)
-        
-    Returns:
-        Dictionary with verdict, answer, and reasoning
-    """
+    from langchain_google_genai import ChatGoogleGenerativeAI
+    from langchain_core.messages import SystemMessage, HumanMessage
+    from langchain_core.output_parsers import PydanticOutputParser
+    from langchain_core.exceptions import OutputParserException
+
+    api_key = load_gemini_api_key()
+
+    print(f"        🧠 Initializing Gemini [{model}]", flush=True)
+
+    if not api_key:
+        print("        ❌ FATAL: Gemini API key missing", flush=True)
+        return EvalResult(reasoning="Missing Gemini API key")
+
+    llm = ChatGoogleGenerativeAI(
+        model=model,
+        google_api_key=api_key,
+        temperature=0.0,
+        max_output_tokens=max_tokens,
+    )
+
+    # Convert messages to LangChain format
+    lc_messages = []
+    for msg in messages:
+        if msg["role"] == "system":
+            lc_messages.append(SystemMessage(content=msg["content"]))
+        elif msg["role"] == "user":
+            lc_messages.append(HumanMessage(content=msg["content"]))
+
+    print(f"        📤 Sending {len(lc_messages)} messages to Gemini", flush=True)
+
+    start = time.time()
+
+    # ----------------------------
+    # 1️⃣ RAW GEMINI CALL (ALWAYS)
+    # ----------------------------
+    try:
+        raw_response = llm.invoke(lc_messages)
+        raw_text = (
+            raw_response.content
+            if hasattr(raw_response, "content")
+            else str(raw_response)
+        )
+    except Exception as e:
+        print("        ❌ Gemini API call failed", flush=True)
+        print(str(e), flush=True)
+        return EvalResult(
+            verdict="uncertain",
+            reasoning="Gemini API call failed"
+        )
+
+    elapsed = time.time() - start
+
+    print(f"\n{'='*80}")
+    print("🧾 RAW GEMINI RESPONSE (EXACT)")
+    print(repr(raw_text))
+    print(f"{'='*80}\n")
+
+    # ----------------------------
+    # 2️⃣ CLEAN + PARSE
+    # ----------------------------
+    cleaned = clean_json(raw_text)
+    parser = PydanticOutputParser(pydantic_object=EvalResult)
+
+    try:
+        result = parser.parse(cleaned)
+
+    except OutputParserException as e:
+        print("        ⚠️ JSON PARSING FAILED", flush=True)
+        print("        CLEANED TEXT WAS:", flush=True)
+        print(cleaned, flush=True)
+
+        result = EvalResult(
+            verdict="uncertain",
+            reasoning="Invalid or non-JSON response from Gemini"
+        )
+
+    print(
+        f"        📥 Gemini responded in {elapsed:.2f}s "
+        f"| verdict={result.verdict} | conf={result.confidence:.2f}",
+        flush=True,
+    )
+
+    return result
+
+
+# ----------------------------
+# EVALUATION
+# ----------------------------
+def evaluate_consistency(
+    question: str,
+    retrieved_chunks: List[str],
+    backstory_facts: str,
+    character: str = "",
+) -> Dict:
+
+    print(f"\n      🔍 Evaluating question:", flush=True)
+    print(f"         Q: {question[:120]}", flush=True)
+
     if not retrieved_chunks:
+        print("      ⚠️ No retrieved chunks → UNCERTAIN", flush=True)
         return {
-            'verdict': 'UNCERTAIN',
-            'answer': 'NOT_MENTIONED',
-            'consistent': False,
-            'confidence': 0.0,
-            'reasoning': 'No chunks retrieved to answer the question'
+            "verdict": "uncertain",
+            "answer": "NOT_MENTIONED",
+            "consistent": False,
+            "confidence": 0.0,
+            "reasoning": "No story passages provided",
+            "retrieved_chunks": [],
         }
-    
-    # CHANGE 1: Use more chunks (up to 8 instead of 5)
-    combined_context = "\n\n".join(retrieved_chunks[:8])
-    
-    print(f"      → Starting evaluation for question...", flush=True)
-    
-    # CHANGE 2: Improved evaluation prompt with character focus
-    char_context = f" about the character {character}" if character else ""
-    
-    evaluation_prompt = f"""You are evaluating narrative consistency. Extract information from story passages{char_context}.
 
+    context = "\n\n".join(retrieved_chunks[:4])[:6000]
+
+    print(
+        f"      📚 Using {min(len(retrieved_chunks),4)} chunks "
+        f"({len(context)} chars)",
+        flush=True,
+    )
+
+    # ----------------------------
+    # PROMPTS
+    # ----------------------------
+    system_prompt = """
+You are a precise narrative consistency evaluator.
+
+You MUST return ONLY a valid JSON object with this exact schema:
+
+{
+  "answer": string,
+  "verdict": "consistent" | "contradict" | "uncertain",
+  "confidence": number,
+  "reasoning": string
+}
+
+Rules:
+- Use ONLY explicit information from the story
+- Do NOT infer or assume
+- JSON ONLY
+- If unsure, return:
+  {
+    "answer": "NOT_MENTIONED",
+    "verdict": "uncertain",
+    "confidence": 0.0,
+    "reasoning": "Insufficient information"
+  }
+"""
+
+    user_prompt = f"""
 CHARACTER: {character if character else "Not specified"}
 QUESTION: {question}
 BACKSTORY CLAIM: {backstory_facts}
 
 STORY PASSAGES:
-{combined_context[:6000]}
+{context}
 
-INSTRUCTIONS:
+Evaluate consistency strictly.
+Return JSON ONLY.
+"""
 
-STEP 1: SEARCH FOR INFORMATION
-Look for ANY of these in the story passages:
-- Mentions of "{character}" (the character)
-- Events, actions, or situations related to the question
-- Indirect references or implications
-- Related characters or events even if described differently
+    result = call_gemini_api(
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt},
+        ]
+    )
 
-IMPORTANT: The story may use different words than the backstory. Examples:
-- Backstory: "engineered" → Story: "arranged", "orchestrated", "planned"
-- Backstory: "Villefort" → Story: "the prosecutor", "his son"
-- Look for the MEANING, not exact words
+    verdict = result.verdict.lower()
+    if verdict not in {"consistent", "contradict", "uncertain"}:
+        verdict = "uncertain"
 
-STEP 2: EXTRACT WHAT THE STORY SAYS
-Write what you found in the passages. Be specific. Quote relevant parts if needed.
-If you find NOTHING related to {character} or the question topic, write "NOT_MENTIONED"
+    print(
+        f"      ✅ Evaluation result: {verdict.upper()} "
+        f"(conf={result.confidence:.2f})",
+        flush=True,
+    )
+    print(f"         ↳ Answer: {result.answer[:120]}", flush=True)
 
-STEP 3: COMPARE WITH BACKSTORY
-- Does the story SUPPORT the backstory claim? → CONSISTENT
-- Does the story CONTRADICT the backstory claim? → INCONSISTENT  
-- Is there NO relevant information in the passages? → UNCERTAIN
-
-VERDICT DEFINITIONS:
-✓ consistent: Story mentions events/facts that match or support the backstory
-  - Same character doing similar actions
-  - Compatible information (even if described differently)
-  - Supporting evidence for the claim
-
-✗  contradict: Story actively contradicts the backstory
-  - Different facts (X did Y, but story says X did Z)
-  - Contradictory dates, events, or relationships
-  - Story explicitly denies or contradicts the claim
-
-? UNCERTAIN: Story has NO relevant information
-  - Character {character} not mentioned in these passages
-  - No events related to the question
-  - Passages are about completely different topics
-  
-CRITICAL RULES:
-1. Extract information actively - if you see {character} or related events, extract them
-2. Only use UNCERTAIN if passages have ZERO relevant information
-3. Different wording is OK - focus on whether facts align or contradict
-4. Be precise: "not mentioned" ≠ "contradicted"
-
-Output ONLY this JSON (no markdown, no explanation, no other text):
-{{
-  "answer": "extracted information from story, or NOT_MENTIONED",
-  "verdict": "CONSISTENT|INCONSISTENT|UNCERTAIN",
-  "confidence": 0.0-1.0,
-  "reasoning": "brief explanation of your verdict"
-}}"""
-
-    try:
-        # Single API call to evaluate
-        print(f"      → Calling Groq API for evaluation...", flush=True)
-        response_data = call_groq_api(
-            messages=[
-                {"role": "system", "content": f"You are an expert at evaluating narrative consistency. Extract information carefully about {character if character else 'the story'} and provide detailed comparisons. Be aggressive in finding relevant information."},
-                {"role": "user", "content": evaluation_prompt}
-            ],
-            temperature=0.1,
-            max_tokens=1024
-        )
-        print(f"      → API call completed, parsing response...", flush=True)
-        
-        # Parse JSON response (existing parsing logic remains the same)
-        message = response_data['choices'][0]['message']
-        response_text = message.get('content', '').strip()
-        if not response_text:
-            raise Exception(f"Empty response")
-        
-        # Extract JSON (handle reasoning if present)
-        raw = response_text.strip()
-        
-        # Remove markdown code blocks if present
-        if "```json" in raw:
-            start = raw.index("```json") + 7
-            end = raw.index("```", start)
-            raw = raw[start:end].strip()
-        elif "```" in raw:
-            start = raw.index("```") + 3
-            end = raw.index("```", start)
-            raw = raw[start:end].strip()
-        
-        # Look for JSON object pattern { ... }
-        json_object_start = re.search(r'\{\s*"', raw, re.DOTALL)
-        
-        if json_object_start:
-            start = json_object_start.start()
-            # Find matching closing brace by counting
-            brace_count = 0
-            in_string = False
-            escape_next = False
-            end = start
-            
-            for i in range(start, len(raw)):
-                char = raw[i]
-                
-                if escape_next:
-                    escape_next = False
-                    continue
-                
-                if char == '\\':
-                    escape_next = True
-                    continue
-                
-                if char == '"' and not escape_next:
-                    in_string = not in_string
-                    continue
-                
-                if not in_string:
-                    if char == '{':
-                        brace_count += 1
-                    elif char == '}':
-                        brace_count -= 1
-                        if brace_count == 0:
-                            end = i + 1
-                            break
-            
-            if end > start:
-                # Found matching braces
-                json_str = raw[start:end]
-                try:
-                    result = json.loads(json_str)
-                    verdict = result.get('verdict', 'UNCERTAIN').upper()
-                    if verdict not in ['CONSISTENT', 'INCONSISTENT', 'UNCERTAIN']:
-                        verdict = 'UNCERTAIN'
-                    
-                    print(f"      ✓ Successfully parsed evaluation result: {verdict}", flush=True)
-                    return {
-                        'verdict': verdict,
-                        'answer': result.get('answer', 'NOT_MENTIONED'),
-                        'consistent': verdict == 'CONSISTENT',
-                        'confidence': float(result.get('confidence', 0.5)),
-                        'reasoning': result.get('reasoning', '')
-                    }
-                except json.JSONDecodeError as je:
-                    print(f"      ⚠️  First parsing attempt failed, trying fallback...", flush=True)
-                    pass
-        
-        # Fallback: try to find JSON object using bracket counting from any { position
-        if "{" in raw:
-            start = raw.index("{")
-            brace_count = 0
-            in_string = False
-            escape_next = False
-            end = start
-            
-            for i in range(start, len(raw)):
-                char = raw[i]
-                if escape_next:
-                    escape_next = False
-                    continue
-                if char == '\\':
-                    escape_next = True
-                    continue
-                if char == '"' and not escape_next:
-                    in_string = not in_string
-                    continue
-                if not in_string:
-                    if char == '{':
-                        brace_count += 1
-                    elif char == '}':
-                        brace_count -= 1
-                        if brace_count == 0:
-                            end = i + 1
-                            break
-            
-            if end > start:
-                try:
-                    json_str = raw[start:end]
-                    result = json.loads(json_str)
-                    verdict = result.get('verdict', 'UNCERTAIN').upper()
-                    if verdict not in ['CONSISTENT', 'INCONSISTENT', 'UNCERTAIN']:
-                        verdict = 'UNCERTAIN'
-                    
-                    return {
-                        'verdict': verdict,
-                        'answer': result.get('answer', 'NOT_MENTIONED'),
-                        'consistent': verdict == 'CONSISTENT',
-                        'confidence': float(result.get('confidence', 0.5)),
-                        'reasoning': result.get('reasoning', '')
-                    }
-                except json.JSONDecodeError:
-                    pass
-        
-        # If all parsing fails, try to extract verdict and answer from text
-        verdict_match = re.search(r'(CONSISTENT|INCONSISTENT|UNCERTAIN)', raw, re.IGNORECASE)
-        answer_match = re.search(r'"answer"\s*:\s*"([^"]*)"', raw)
-        
-        verdict = 'UNCERTAIN'
-        if verdict_match:
-            verdict = verdict_match.group(1).upper()
-        
-        answer = 'NOT_MENTIONED'
-        if answer_match:
-            answer = answer_match.group(1)
-        
-        return {
-            'verdict': verdict,
-            'answer': answer,
-            'consistent': verdict == 'CONSISTENT',
-            'confidence': 0.3,
-            'reasoning': f'Extracted from response text (parsing failed): {raw[:200]}'
-        }
-    except Exception as e:
-        print(f"  ⚠️  Evaluation error: {e}", flush=True)
-        return {
-            'verdict': 'UNCERTAIN',
-            'answer': 'NOT_MENTIONED',
-            'consistent': False,
-            'confidence': 0.0,
-            'reasoning': f'Evaluation error: {str(e)[:100]}'
-        }
-
-
-# CHANGE 3: Improved decision rule (optional improvement)
-def apply_decision_rule(evaluations: List[Dict]) -> Dict:
-    """
-    Decision rule: Aggregate results from evaluations.
-    
-    LOGIC:
-    1. ANY inconsistency found → INCONSISTENT (backstory contradicted)
-    2. Mostly UNCERTAIN (70%+) → INCONSISTENT (backstory not supported by evidence)
-    3. Majority CONSISTENT (50%+) with no inconsistencies → CONSISTENT
-    4. Some CONSISTENT but many UNCERTAIN → LIKELY_CONSISTENT
-    5. All UNCERTAIN → UNCERTAIN
-    
-    Args:
-        evaluations: List of evaluation results, each with 'verdict'
-        
-    Returns:
-        Dictionary with final verdict and aggregated signals
-    """
-    # Count verdicts
-    consistent_count = 0
-    inconsistent_count = 0
-    uncertain_count = 0
-    
-    for eval_result in evaluations:
-        verdict = eval_result.get('verdict', 'UNCERTAIN').upper()
-        if verdict == 'CONSISTENT':
-            consistent_count += 1
-        elif verdict == 'INCONSISTENT':
-            inconsistent_count += 1
-        else:
-            uncertain_count += 1
-    
-    total_evaluations = len(evaluations)
-    
-    # RULE 1: ANY inconsistency found → INCONSISTENT
-    # If story contradicts backstory even once, backstory is wrong
-    if inconsistent_count > 0:
-        verdict = "INCONSISTENT"
-        verdict_reason = f"{inconsistent_count} inconsistency/inconsistencies found out of {total_evaluations} evaluations"
-        confidence = min(0.7 + (inconsistent_count / total_evaluations) * 0.3, 1.0)
-    
-    # RULE 2: Mostly UNCERTAIN (70%+) → INCONSISTENT
-    # If we can't find evidence for most claims, backstory is not supported
-    elif uncertain_count >= total_evaluations * 0.7:
-        verdict = "INCONSISTENT"
-        verdict_reason = f"Backstory not supported by text: {uncertain_count}/{total_evaluations} claims have no evidence"
-        confidence = 0.65
-    
-    # RULE 3: Majority CONSISTENT (50%+) and no inconsistencies → CONSISTENT
-    elif consistent_count >= total_evaluations * 0.5 and inconsistent_count == 0:
-        verdict = "CONSISTENT"
-        verdict_reason = f"{consistent_count}/{total_evaluations} evaluations support the backstory"
-        confidence = min(0.6 + (consistent_count / total_evaluations) * 0.3, 0.95)
-    
-    # RULE 4: Some CONSISTENT but many UNCERTAIN → LIKELY_CONSISTENT
-    # We found some supporting evidence, but missing evidence for many claims
-    elif consistent_count > 0 and inconsistent_count == 0:
-        verdict = "LIKELY_CONSISTENT"
-        verdict_reason = f"Partial support: {consistent_count} consistent, {uncertain_count} uncertain out of {total_evaluations}"
-        confidence = 0.4 + (consistent_count / total_evaluations) * 0.2
-    
-    # RULE 5: All UNCERTAIN → UNCERTAIN
-    else:
-        verdict = "UNCERTAIN"
-        verdict_reason = f"No evidence found: {uncertain_count}/{total_evaluations} evaluations are uncertain"
-        confidence = 0.3
-    
     return {
-        'verdict': verdict,
-        'verdict_reason': verdict_reason,
-        'confidence': confidence,
-        'signals': {
-            'consistent_count': consistent_count,
-            'inconsistent_count': inconsistent_count,
-            'uncertain_count': uncertain_count,
-            'total_evaluations': total_evaluations
+        "verdict": verdict,
+        "answer": result.answer,
+        "consistent": verdict == "consistent",
+        "confidence": float(result.confidence),
+        "reasoning": result.reasoning,
+        "retrieved_chunks": retrieved_chunks,
+    }
+
+
+# ----------------------------
+# FINAL DECISION RULE
+# ----------------------------
+def apply_decision_rule(evaluations: List[Dict]) -> Dict:
+
+    print(f"\n   🧮 Applying final decision rule...", flush=True)
+
+    c = sum(e["verdict"] == "consistent" for e in evaluations)
+    x = sum(e["verdict"] == "contradict" for e in evaluations)
+    u = sum(e["verdict"] == "uncertain" for e in evaluations)
+
+    print(
+        f"      Signals → consistent={c}, contradict={x}, uncertain={u}",
+        flush=True,
+    )
+
+    total = len(evaluations)
+
+    if x > 0:
+        print("      🚨 CONTRADICTION detected → FINAL=CONTRADICT", flush=True)
+        return {
+            "verdict": "contradict",
+            "verdict_reason": f"{x} contradictions found",
+            "confidence": round(min(0.7 + x / total * 0.3, 1.0), 2),
         }
+
+    print("      🟢 No contradictions → FINAL=CONSISTENT", flush=True)
+    return {
+        "verdict": "consistent",
+        "verdict_reason": "No contradictions detected",
+        "confidence": round(0.6 + c / max(total, 1) * 0.3, 2),
     }

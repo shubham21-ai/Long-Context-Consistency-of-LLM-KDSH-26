@@ -77,7 +77,7 @@ def load_gemini_api_key() -> str:
     Raises:
         RuntimeError: if no API key can be found.
     """
-    api_key = os.getenv("GEMINI_API_KEY")
+    api_key = os.getenv("GEMINII_API_KEY")
     if api_key:
         return api_key.strip()
     

@@ -1,0 +1,2965 @@
+================================================================================
+NARRATIVE CONSISTENCY TEST RESULTS
+Timestamp: 2026-01-10 11:27:14
+================================================================================
+
+
+================================================================================
+ROW 1
+================================================================================
+ID: 46
+Book: In Search of the Castaways
+Character: Thalcave
+Expected Label: consistent
+Backstory:
+Thalcave’s people faded as colonists advanced; his father, last of the tribal guides, knew the pampas geography and animal ways, while his mother died giving birth. Boyhood was spent roaming the plains with his father, learning to track, tame horses and steer by the stars.
+
+--------------------------------------------------------------------------------
+
+  Question [1/5]:
+  What is the status of Thalcave's people?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+He turned towards Thalcave, and, recalling a few words of Spanish,
+began a conversation with the Indian, frequently interrupted by the
+cracks of the rifle.
+
+It was not without difficulty that these two men succeeded in
+understanding each other. Glenarvan, fortunately, knew the habits of
+the red wolf. Without this knowledge he could not have interpreted the
+words and gestures of the Patagonian.
+
+Nevertheless, a quarter of an hour passed before he could give to
+Robert the meaning of Thalcave's answer. He had questioned the Indian
+concerning their situation.
+
+"And what did he answer?" inquired Robert.
+
+"He said that, cost what it may, we must hold out till daybreak. The
+aguara goes out only at night, and when morning comes he returns to
+his lair. He is the wolf of darkness, a cowardly beast that fears the
+daylight."
+
+"Well, let us defend ourselves till day."
+
+"Yes, my boy, and with our knives if we can no longer use our guns."
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [2/5]:
+  What was the occupation of Thalcave's father?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+"You have seen him?"
+
+"No, but he is mentioned in the accounts of the Indians. He was a brave
+man."
+
+"You understand, my friends," said Paganel; "a courageous man!"
+
+"My father!" cried Robert Grant.
+
+Then, addressing Paganel:
+
+"How do you say 'It is my father,' in Spanish?" he asked.
+
+"_Es mio padre_," answered the geographer.
+
+Immediately Robert, taking Thalcave's hands, said in a sweet voice,--
+
+"_Es mio padre!_"
+
+"_Suo padre!_" replied the Patagonian, whose look brightened.
+
+He took the boy in his arms, lifted him from his horse, and gazed at
+him with the most curious sympathy. His intelligent countenance became
+suffused with a peaceful emotion.
+
+But Paganel had not finished his inquiries. Where was this prisoner?
+What was he doing? When had Thalcave heard of him? All these questions
+thronged his mind at once. He did not have to wait long for answers,
+but learnt that the European was a slave of one of the Indian tribes
+that scour the plains.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [3/5]:
+  How did Thalcave's mother die?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+Glenarvan took his hand, and, pointing to the yacht, said,--
+
+"Come!"
+
+The Indian shook his head.
+
+"Come, my friend!" continued Glenarvan.
+
+"No," replied Thalcave, gently. "Here is Thaouka, and there are the
+Pampas!" he added, indicating with a sweep of his hand the vast expanse
+of the plains.
+
+It was clear that the Indian would never leave the prairies, where the
+bones of his fathers whitened. Glenarvan knew the strong attachment
+of these children of the desert to their native country. He therefore
+shook Thalcave's hand, and did not insist; not even when the Indian,
+smiling in his peculiar way, refused the price of his services,
+saying,--
+
+"It was done out of friendship."
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [4/5]:
+  What skills did Thalcave learn from his father?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+Thalcave now began to observe with an anxious air the state of things
+around him. He frequently stopped, and rose in his stirrups. His tall
+form enabled him to survey a wide range; but, perceiving nothing that
+could enlighten him, he resumed his undeviating course. A mile farther,
+he stopped again, and, turning from the beaten track, proceeded a short
+distance, first to the north, then to the south, and then resumed his
+place at the head of the party, without saying either what he hoped or
+what he feared.
+
+These manoeuvres, many times repeated, puzzled Paganel and annoyed
+Glenarvan. The geographer was accordingly requested to interrogate
+the Indian, which he did at once. Thalcave replied that he was
+astonished to see the plain so soaked with moisture. Never within his
+recollection, since he had performed the office of guide, had his feet
+trodden a soil so saturated. Even in the season of the great rains the
+Argentine plain was always easily passed.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [5/5]:
+  What did Thalcave's father know about the pampas?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+He turned towards Thalcave, and, recalling a few words of Spanish,
+began a conversation with the Indian, frequently interrupted by the
+cracks of the rifle.
+
+It was not without difficulty that these two men succeeded in
+understanding each other. Glenarvan, fortunately, knew the habits of
+the red wolf. Without this knowledge he could not have interpreted the
+words and gestures of the Patagonian.
+
+Nevertheless, a quarter of an hour passed before he could give to
+Robert the meaning of Thalcave's answer. He had questioned the Indian
+concerning their situation.
+
+"And what did he answer?" inquired Robert.
+
+"He said that, cost what it may, we must hold out till daybreak. The
+aguara goes out only at night, and when morning comes he returns to
+his lair. He is the wolf of darkness, a cowardly beast that fears the
+daylight."
+
+"Well, let us defend ourselves till day."
+
+"Yes, my boy, and with our knives if we can no longer use our guns."
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+============================================================
+FINAL ROW RESULT
+============================================================
+Book: In Search of the Castaways
+Character: Thalcave
+Verdict: consistent
+Expected Label: consistent
+Predicted Label: 1
+Match: NO
+============================================================
+
+
+================================================================================
+ROW 2
+================================================================================
+ID: 137
+Book: The Count of Monte Cristo
+Character: Faria
+Expected Label: contradict
+Backstory:
+Suspected again in 1815, he was re-arrested and shipped to the Château d’If, this time for life.
+
+--------------------------------------------------------------------------------
+
+  Question [1/5]:
+  In what year was Faria suspected again?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+It was the governor, who, hearing of Faria’s illness from the jailer,
+had come in person to see him.
+
+Faria sat up to receive him, avoiding all gestures in order that he
+might conceal from the governor the paralysis that had already half
+stricken him with death. His fear was lest the governor, touched with
+pity, might order him to be removed to better quarters, and thus
+separate him from his young companion. But fortunately this was not the
+case, and the governor left him, convinced that the poor madman, for
+whom in his heart he felt a kind of affection, was only troubled with a
+slight indisposition.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [2/5]:
+  What was the reason for Faria's re-arrest in 1815?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+“Well?” asked Danglars.
+
+“Well, sir,” replied Eugénie, “I have tried to the very last and now
+that the moment has come, I feel in spite of all my efforts that it is
+impossible.”
+
+“But,” said Danglars, whose weak mind was at first quite overwhelmed
+with the weight of this pitiless logic, marking evident premeditation
+and force of will, “what is your reason for this refusal, Eugénie? what
+reason do you assign?”
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [3/5]:
+  What location was Faria shipped to after his re-arrest in 1815?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+It was the governor, who, hearing of Faria’s illness from the jailer,
+had come in person to see him.
+
+Faria sat up to receive him, avoiding all gestures in order that he
+might conceal from the governor the paralysis that had already half
+stricken him with death. His fear was lest the governor, touched with
+pity, might order him to be removed to better quarters, and thus
+separate him from his young companion. But fortunately this was not the
+case, and the governor left him, convinced that the poor madman, for
+whom in his heart he felt a kind of affection, was only troubled with a
+slight indisposition.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [4/5]:
+  What was the duration of Faria's sentence after his re-arrest in 1815?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+50181m
+
+
+
+The president called for the indictment, revised as we know, by the
+clever and implacable pen of Villefort. During the reading of this,
+which was long, the public attention was continually drawn towards
+Andrea, who bore the inspection with Spartan unconcern. Villefort had
+never been so concise and eloquent. The crime was depicted in the most
+vivid colors; the former life of the prisoner, his transformation, a
+review of his life from the earliest period, were set forth with all
+the talent that a knowledge of human life could furnish to a mind like
+that of the procureur. Benedetto was thus forever condemned in public
+opinion before the sentence of the law could be pronounced.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [5/5]:
+  What was the name of the location where Faria was imprisoned after his re-arrest in 1815?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+It was the governor, who, hearing of Faria’s illness from the jailer,
+had come in person to see him.
+
+Faria sat up to receive him, avoiding all gestures in order that he
+might conceal from the governor the paralysis that had already half
+stricken him with death. His fear was lest the governor, touched with
+pity, might order him to be removed to better quarters, and thus
+separate him from his young companion. But fortunately this was not the
+case, and the governor left him, convinced that the poor madman, for
+whom in his heart he felt a kind of affection, was only troubled with a
+slight indisposition.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+============================================================
+FINAL ROW RESULT
+============================================================
+Book: The Count of Monte Cristo
+Character: Faria
+Verdict: consistent
+Expected Label: contradict
+Predicted Label: 1
+Match: NO
+============================================================
+
+
+================================================================================
+ROW 3
+================================================================================
+ID: 74
+Book: In Search of the Castaways
+Character: Kai-Koumou
+Expected Label: consistent
+Backstory:
+Before each fight he studied the crack-patterns of his mother’s shark-tooth necklace by moonlight to divine the outcome.
+
+--------------------------------------------------------------------------------
+
+  Question [1/5]:
+  Does Kai-Koumou study the crack-patterns of his mother's shark-tooth necklace before each fight?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+[Sidenote: ACCESSIONS, AND PROGRESS.]
+
+The sun was just sinking below the horizon as the canoe ran upon a bank
+of pumice-stones, which the Waikato carries with it from its source
+in the volcanic mountains. Several trees grew here, as if designed to
+shelter an encampment. Kai-Koumou landed his prisoners.
+
+The men had their hands tied, the ladies were free. All were placed
+in the centre of the encampment, around which large fires formed an
+impassable barrier.
+
+Before Kai-Koumou had informed his captives of his intention to
+exchange them, Glenarvan and Captain Mangles had discussed various
+methods of recovering their liberty. What they could not venture in the
+boat they hoped to attempt on land, at the hour for encamping, under
+cover of the night.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [2/5]:
+  Does Kai-Koumou study the crack-patterns of his mother's shark-tooth necklace by moonlight?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+Around him were assembled the principal warriors of his tribe, among
+whom was seen the chief whose canoe had first joined Kai-Koumou on the
+river. He was a man of about forty, robust, and of fierce and cruel
+aspect. His name was Kara-TÃ©tÃ©, which means in the native language
+"The Irascible." Kai-Koumou treated him with some respect, and from
+the delicacy of his tattooing it was evident that he occupied a high
+rank in his tribe. An observer, however, would have detected a rivalry
+between the two chiefs. The major, indeed, perceived that Kara-TÃ©tÃ©'s
+influence surpassed that of Kai-Koumou. They both ruled the powerful
+tribes of the Waikato with equal rank; and, during this interview,
+although Kai-Koumou smiled, his eyes betrayed a deep hostility.
+
+He now questioned Glenarvan.
+
+"You are English?" said he.
+
+"Yes," replied Glenarvan, without hesitation, for this nationality
+would probably facilitate an exchange.
+
+[Sidenote: THE RATE OF BARTER.]
+
+"And your companions?" asked Kai-Koumou.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [3/5]:
+  Does Kai-Koumou use the crack-patterns of his mother's shark-tooth necklace to divine the outcome of each fight?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+Each cast a longing glance towards the surrounding mountains, the deep
+valleys, still veiled in mist, and the surface of Lake Taupo, gently
+rippling beneath the morning wind. Then all, eager to know Paganel's
+new project, gathered around him with questioning looks; while the
+geographer at once satisfied the restless curiosity of his companions.
+
+"My friends," said he, "my project has this advantage, that if it does
+not produce the result that I expect, or even fails, our situation will
+not be impaired. But it ought to and will succeed."
+
+"And this project?" asked the major.
+
+"This is it," replied Paganel. "The superstition of the natives has
+made this mountain a place of refuge, and this superstition must help
+us to escape. If I succeed in convincing Kai-Koumou that we have become
+the victims of our sacrilege, that the wrath of Heaven has fallen upon
+us, in short, that we have met a terrible death, do you think that he
+will abandon the mountain and return to his village?"
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [4/5]:
+  Is the object Kai-Koumou studies his mother's shark-tooth necklace?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+Around him were assembled the principal warriors of his tribe, among
+whom was seen the chief whose canoe had first joined Kai-Koumou on the
+river. He was a man of about forty, robust, and of fierce and cruel
+aspect. His name was Kara-TÃ©tÃ©, which means in the native language
+"The Irascible." Kai-Koumou treated him with some respect, and from
+the delicacy of his tattooing it was evident that he occupied a high
+rank in his tribe. An observer, however, would have detected a rivalry
+between the two chiefs. The major, indeed, perceived that Kara-TÃ©tÃ©'s
+influence surpassed that of Kai-Koumou. They both ruled the powerful
+tribes of the Waikato with equal rank; and, during this interview,
+although Kai-Koumou smiled, his eyes betrayed a deep hostility.
+
+He now questioned Glenarvan.
+
+"You are English?" said he.
+
+"Yes," replied Glenarvan, without hesitation, for this nationality
+would probably facilitate an exchange.
+
+[Sidenote: THE RATE OF BARTER.]
+
+"And your companions?" asked Kai-Koumou.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [5/5]:
+  Does Kai-Koumou study the crack-patterns of his mother's shark-tooth necklace to predict the outcome of each fight?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+Each cast a longing glance towards the surrounding mountains, the deep
+valleys, still veiled in mist, and the surface of Lake Taupo, gently
+rippling beneath the morning wind. Then all, eager to know Paganel's
+new project, gathered around him with questioning looks; while the
+geographer at once satisfied the restless curiosity of his companions.
+
+"My friends," said he, "my project has this advantage, that if it does
+not produce the result that I expect, or even fails, our situation will
+not be impaired. But it ought to and will succeed."
+
+"And this project?" asked the major.
+
+"This is it," replied Paganel. "The superstition of the natives has
+made this mountain a place of refuge, and this superstition must help
+us to escape. If I succeed in convincing Kai-Koumou that we have become
+the victims of our sacrilege, that the wrath of Heaven has fallen upon
+us, in short, that we have met a terrible death, do you think that he
+will abandon the mountain and return to his village?"
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+============================================================
+FINAL ROW RESULT
+============================================================
+Book: In Search of the Castaways
+Character: Kai-Koumou
+Verdict: consistent
+Expected Label: consistent
+Predicted Label: 1
+Match: NO
+============================================================
+
+
+================================================================================
+ROW 4
+================================================================================
+ID: 109
+Book: The Count of Monte Cristo
+Character: Noirtier
+Expected Label: contradict
+Backstory:
+Villefort’s drift toward the royalists disappointed him; father and son argued politics at every family gathering.
+
+--------------------------------------------------------------------------------
+
+  Question [1/5]:
+  Did Villefort's father and son argue about politics at family gatherings?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+No sooner had Villefort left the salon, than he assumed the grave air
+of a man who holds the balance of life and death in his hands. Now, in
+spite of the nobility of his countenance, the command of which, like a
+finished actor, he had carefully studied before the glass, it was by no
+means easy for him to assume an air of judicial severity. Except the
+recollection of the line of politics his father had adopted, and which
+might interfere, unless he acted with the greatest prudence, with his
+own career, Gérard de Villefort was as happy as a man could be. Already
+rich, he held a high official situation, though only twenty-seven. He
+was about to marry a young and charming woman, whom he loved, not
+passionately, but reasonably, as became a deputy attorney of the king;
+and besides her personal attractions, which were very great,
+Mademoiselle de Saint-Méran’s family possessed considerable political
+influence, which they would, of course, exert in his favor. The dowry
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [2/5]:
+  What was Villefort's father's political leaning that disappointed Noirtier?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+“Do you know, my dear Villefort,” cried the Comte de Salvieux, “that is
+exactly what I myself said the other day at the Tuileries, when
+questioned by his majesty’s principal chamberlain touching the
+singularity of an alliance between the son of a Girondin and the
+daughter of an officer of the Duc de Condé; and I assure you he seemed
+fully to comprehend that this mode of reconciling political differences
+was based upon sound and excellent principles. Then the king, who,
+without our suspecting it, had overheard our conversation, interrupted
+us by saying, ‘Villefort’—observe that the king did not pronounce the
+word Noirtier, but, on the contrary, placed considerable emphasis on
+that of Villefort—‘Villefort,’ said his majesty, ‘is a young man of
+great judgment and discretion, who will be sure to make a figure in his
+profession; I like him much, and it gave me great pleasure to hear that
+he was about to become the son-in-law of the Marquis and Marquise de
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [3/5]:
+  Did Noirtier and Villefort have disagreements at family gatherings?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+And without listening to Villefort he arose, and followed Valentine,
+who was running downstairs with the joy of a shipwrecked mariner who
+finds a rock to cling to. M. de Villefort followed them. Château-Renaud
+and Morcerf exchanged a third look of still increasing wonder.
+
+
+
+ Chapter 75. A Signed Statement
+
+Noirtier was prepared to receive them, dressed in black, and installed
+in his armchair. When the three persons he expected had entered, he
+looked at the door, which his valet immediately closed.
+
+“Listen,” whispered Villefort to Valentine, who could not conceal her
+joy; “if M. Noirtier wishes to communicate anything which would delay
+your marriage, I forbid you to understand him.”
+
+Valentine blushed, but did not answer. Villefort, approached Noirtier.
+
+“Here is M. Franz d’Épinay,” said he; “you requested to see him. We
+have all wished for this interview, and I trust it will convince you
+how ill-formed are your objections to Valentine’s marriage.”
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [4/5]:
+  What was the subject of Noirtier and Villefort's disagreements?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+M. de Villefort’s communications on the subject were very limited and
+concise; he told her, in fact, that an explanation had taken place
+between M. Noirtier, M. d’Épinay, and himself, and that the marriage of
+Valentine and Franz would consequently be broken off. This was an
+awkward and unpleasant thing to have to report to those who were
+waiting. She therefore contented herself with saying that M. Noirtier
+having at the commencement of the discussion been attacked by a sort of
+apoplectic fit, the affair would necessarily be deferred for some days
+longer. This news, false as it was following so singularly in the train
+of the two similar misfortunes which had so recently occurred,
+evidently astonished the auditors, and they retired without a word.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [5/5]:
+  Were Noirtier and Villefort's disagreements limited to family gatherings?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+M. de Villefort’s communications on the subject were very limited and
+concise; he told her, in fact, that an explanation had taken place
+between M. Noirtier, M. d’Épinay, and himself, and that the marriage of
+Valentine and Franz would consequently be broken off. This was an
+awkward and unpleasant thing to have to report to those who were
+waiting. She therefore contented herself with saying that M. Noirtier
+having at the commencement of the discussion been attacked by a sort of
+apoplectic fit, the affair would necessarily be deferred for some days
+longer. This news, false as it was following so singularly in the train
+of the two similar misfortunes which had so recently occurred,
+evidently astonished the auditors, and they retired without a word.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+============================================================
+FINAL ROW RESULT
+============================================================
+Book: The Count of Monte Cristo
+Character: Noirtier
+Verdict: consistent
+Expected Label: contradict
+Predicted Label: 1
+Match: NO
+============================================================
+
+
+================================================================================
+ROW 5
+================================================================================
+ID: 104
+Book: The Count of Monte Cristo
+Character: Noirtier
+Expected Label: consistent
+Backstory:
+His parents were targeted in a reprisal for supporting the Revolution; his mother was killed, deepening his distrust of authority.
+
+--------------------------------------------------------------------------------
+
+  Question [1/5]:
+  Were Noirtier's parents targeted in a reprisal?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+“True,” replied the marquise, without wincing in the slightest degree
+at the tragic remembrance thus called up; “but bear in mind, if you
+please, that our respective parents underwent persecution and
+proscription from diametrically opposite principles; in proof of which
+I may remark, that while my family remained among the staunchest
+adherents of the exiled princes, your father lost no time in joining
+the new government; and that while the Citizen Noirtier was a Girondin,
+the Count Noirtier became a senator.”
+
+“Dear mother,” interposed Renée, “you know very well it was agreed that
+all these disagreeable reminiscences should forever be laid aside.”
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [2/5]:
+  Was Noirtier's mother killed?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+30165m
+
+
+
+Noirtier’s look was furious; it was very evident that something
+desperate was passing in the old man’s mind, for a cry of anger and
+grief rose in his throat, and not being able to find vent in utterance,
+appeared almost to choke him, for his face and lips turned quite purple
+with the struggle. Villefort quietly opened a window, saying, “It is
+very warm, and the heat affects M. Noirtier.” He then returned to his
+place, but did not sit down.
+
+“This marriage,” added Madame de Villefort, “is quite agreeable to the
+wishes of M. d’Épinay and his family; besides, he had no relations
+nearer than an uncle and aunt, his mother having died at his birth, and
+his father having been assassinated in 1815, that is to say, when he
+was but two years old; it naturally followed that the child was
+permitted to choose his own pursuits, and he has, therefore, seldom
+acknowledged any other authority but that of his own will.”
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [3/5]:
+  Did Noirtier's parents support the Revolution?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+“True,” replied the marquise, without wincing in the slightest degree
+at the tragic remembrance thus called up; “but bear in mind, if you
+please, that our respective parents underwent persecution and
+proscription from diametrically opposite principles; in proof of which
+I may remark, that while my family remained among the staunchest
+adherents of the exiled princes, your father lost no time in joining
+the new government; and that while the Citizen Noirtier was a Girondin,
+the Count Noirtier became a senator.”
+
+“Dear mother,” interposed Renée, “you know very well it was agreed that
+all these disagreeable reminiscences should forever be laid aside.”
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [4/5]:
+  Was Noirtier's distrust of authority deepened by an event?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+30165m
+
+
+
+Noirtier’s look was furious; it was very evident that something
+desperate was passing in the old man’s mind, for a cry of anger and
+grief rose in his throat, and not being able to find vent in utterance,
+appeared almost to choke him, for his face and lips turned quite purple
+with the struggle. Villefort quietly opened a window, saying, “It is
+very warm, and the heat affects M. Noirtier.” He then returned to his
+place, but did not sit down.
+
+“This marriage,” added Madame de Villefort, “is quite agreeable to the
+wishes of M. d’Épinay and his family; besides, he had no relations
+nearer than an uncle and aunt, his mother having died at his birth, and
+his father having been assassinated in 1815, that is to say, when he
+was but two years old; it naturally followed that the child was
+permitted to choose his own pursuits, and he has, therefore, seldom
+acknowledged any other authority but that of his own will.”
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [5/5]:
+  Was Noirtier's mother killed in a reprisal?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+30165m
+
+
+
+Noirtier’s look was furious; it was very evident that something
+desperate was passing in the old man’s mind, for a cry of anger and
+grief rose in his throat, and not being able to find vent in utterance,
+appeared almost to choke him, for his face and lips turned quite purple
+with the struggle. Villefort quietly opened a window, saying, “It is
+very warm, and the heat affects M. Noirtier.” He then returned to his
+place, but did not sit down.
+
+“This marriage,” added Madame de Villefort, “is quite agreeable to the
+wishes of M. d’Épinay and his family; besides, he had no relations
+nearer than an uncle and aunt, his mother having died at his birth, and
+his father having been assassinated in 1815, that is to say, when he
+was but two years old; it naturally followed that the child was
+permitted to choose his own pursuits, and he has, therefore, seldom
+acknowledged any other authority but that of his own will.”
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+============================================================
+FINAL ROW RESULT
+============================================================
+Book: The Count of Monte Cristo
+Character: Noirtier
+Verdict: consistent
+Expected Label: consistent
+Predicted Label: 1
+Match: NO
+============================================================
+
+
+================================================================================
+ROW 6
+================================================================================
+ID: 35
+Book: In Search of the Castaways
+Character: Tom Ayrton/Ben Joyce
+Expected Label: contradict
+Backstory:
+The mutiny began when Captain Grant uncovered his forged logbook and threatened to report him; “marooning” was a botched silencing in which Ayrton, thinking fast, locked the captain inside the keel-less lifeboat.
+
+--------------------------------------------------------------------------------
+
+  Question [1/5]:
+  What event led to the mutiny?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+But this event disconcerted Glenarvan's hopes. If Captain Grant was
+a prisoner of the caziques, he must have been carried by them to the
+northern frontiers. Yet how and where to find him? Must they attempt
+a perilous and almost useless search to the northern limits of the
+Pampas? It was a serious matter, which was to be earnestly considered.
+
+However, one important question was still to be asked of the sergeant,
+and the major thought of this, while his companions were looking at
+each other in silence.
+
+"Have you heard of any Europeans being retained as prisoners by the
+caziques of the Pampas?"
+
+Manuel reflected for a few moments, like a man who recalls events to
+recollection.
+
+"Yes," said he, at length.
+
+"Ah!" cried Glenarvan, conceiving a new hope.
+
+[Sidenote: REVELATIONS.]
+
+Paganel, MacNabb, Robert, and he now surrounded the sergeant.
+
+"Speak, speak!" cried they, gazing at him with eagerness even in their
+looks.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [2/5]:
+  What was the captain's plan for Tom Ayrton/Ben Joyce?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+But at sight of Glenarvan and his companions, with tattered garments,
+emaciated features, and the traces of extreme suffering, the crew
+ceased their lively demonstrations. These were spectres, not the bold
+and dashing travelers whom, three months before, hope had stimulated to
+a search for the shipwrecked captain. Chance alone had led them back to
+this vessel that they had ceased to regard as theirs, and in what a sad
+state of exhaustion and feebleness!
+
+However, before thinking of fatigue, or the imperative calls of hunger
+and thirst, Glenarvan questioned Tom Austin concerning his presence in
+these waters. Why was the Duncan on the eastern coast of New Zealand?
+Why was she not in the hands of Ben Joyce? By what providential working
+had God restored her to the fugitives? These were the questions that
+were hurriedly addressed to Tom Austin. The old sailor did not know
+which to answer first. He therefore concluded to listen only to Lord
+Glenarvan, and reply to him.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [3/5]:
+  What object was used to lock Captain Grant inside?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+[Sidenote: AUSTRALIANS, NATIVE AND IMPORTED.]
+
+The young gentlemen were soon made acquainted with the object of the
+expedition, and took a lively interest in Glenarvan's search, giving
+also great encouragement to the captain's children.
+
+"Harry Grant," said Michael, "has evidently fallen into the hands of
+the natives, since he has not appeared in the settlements on the coast.
+He knew his position exactly, as the document proves, and, as he has
+not reached any English colony, he must have been made prisoner by the
+natives as soon as he landed."
+
+"That is precisely what happened to his quartermaster, Ayrton," replied
+Captain Mangles.
+
+"But, gentlemen," inquired Lady Helena, "have you never heard of the
+shipwreck of the Britannia?"
+
+"Never, madam," said Michael.
+
+"And what treatment do you think Captain Grant would experience as a
+prisoner among the Australians?"
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [4/5]:
+  What was the intended consequence of locking Captain Grant inside?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+"Exactly," replied Ayrton.
+
+"And do you know what Captain Grant's plans were then?"
+
+"Vaguely."
+
+"Continue, Ayrton," said Glenarvan. "The least sign may set us on the
+track."
+
+"What I can say is this, my lord. Captain Grant intended to visit New
+Zealand. But this part of his programme was not carried out while I was
+on board. The Britannia might, therefore, after leaving Callao, have
+gained the shores of New Zealand. This would agree with the date, June
+27, 1862, given in the document as the time of the shipwreck."
+
+"Evidently," remarked Paganel.
+
+"But," added Glenarvan, "there is nothing in these half-obliterated
+portions of the document which can apply to New Zealand."
+
+"That I cannot answer," said the quartermaster.
+
+"Well, Ayrton," continued Glenarvan, "you have kept your word, and I
+will keep mine. We will decide on what island of the Pacific you shall
+be abandoned."
+
+"Oh, it matters little to me," answered Ayrton.
+
+"Return to your cabin now, and await our decision."
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [5/5]:
+  What was the actual consequence of locking Captain Grant inside?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+The situation was indeed alarming. The captain would not leave his
+post for an instant. He was tortured by fears that his impassive face
+would not betray, and persistently sought to penetrate with his gaze
+the gathering gloom. And he had good cause for fear. The Duncan, driven
+out of her course, was running towards the Australian coast with a
+swiftness that nothing could arrest. He felt, too, as if by instinct,
+that a strong current was drawing him along. At every moment he feared
+the shock of a reef upon which the yacht would be dashed into a
+thousand pieces, and he calculated that the shore was not more than a
+dozen miles to leeward.
+
+Finally he went in search of Lord Glenarvan, consulted with him in
+private, explained their actual situation, viewed it with the coolness
+of a sailor who is ready for any emergency, and ended by saying that he
+should be obliged perhaps to run the Duncan ashore.
+
+"To save those she carries, if possible, my lord," he added.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+============================================================
+FINAL ROW RESULT
+============================================================
+Book: In Search of the Castaways
+Character: Tom Ayrton/Ben Joyce
+Verdict: consistent
+Expected Label: contradict
+Predicted Label: 1
+Match: NO
+============================================================
+
+
+================================================================================
+ROW 7
+================================================================================
+ID: 18
+Book: In Search of the Castaways
+Character: Jacques Paganel
+Expected Label: consistent
+Backstory:
+He once found bribery entries in his father’s old ledgers, reported them, and saw his father’s colleague dismissed; temporary gossip made him wary of the upper nobility.
+
+--------------------------------------------------------------------------------
+
+  Question [1/5]:
+  Did Jacques Paganel find bribery entries in his father's old ledgers?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+Thus it was that Harry Grant and his two companions were rescued, and
+that John Mangles married Mary Grant in the old cathedral of St. Mungo,
+where the Rev. Mr. Morton, who nine months before had prayed for the
+rescue of the father, now blessed the union of the daughter with one
+of his deliverers. It was arranged that Robert should be a sailor,
+like his father and brother-in-law, and that he should continue the
+contemplated project of the former, under the munificent patronage of
+Lord Glenarvan.
+
+But was Jacques Paganel to die a bachelor? Certainly not; for, after
+his heroic exploits, the worthy geographer could not escape celebrity.
+His eccentricities (and his abilities) made him much talked of in
+Scotland. People seemed as though they could not show him enough
+attention.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [2/5]:
+  Did Jacques Paganel report the bribery entries he found?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+CHAPTER VII.
+
+JACQUES PAGANEL IS UNDECEIVED.
+
+
+The secretary of the Geographical Society must have been an agreeable
+person, for all this was said with much modesty. Lord Glenarvan,
+moreover, knew perfectly whom he had met. The name and merit of Jacques
+Paganel were well known to him. His geographical labors, his reports
+on modern discoveries, published in the bulletins of the Society, his
+correspondence with the entire world, had made him one of the most
+distinguished scientific men of France. Thus Glenarvan extended his
+hand very cordially to his unexpected guest.
+
+"And now that our introduction is over," added he, "will you permit me,
+Monsieur Paganel, to ask you a question?"
+
+"Twenty, my lord," replied Jacques Paganel; "it will always be a
+pleasure to converse with you."
+
+"You arrived on board this vessel the day before yesterday?"
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [3/5]:
+  Was a colleague of Jacques Paganel's father dismissed as a result of the bribery entries?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+Thus it was that Harry Grant and his two companions were rescued, and
+that John Mangles married Mary Grant in the old cathedral of St. Mungo,
+where the Rev. Mr. Morton, who nine months before had prayed for the
+rescue of the father, now blessed the union of the daughter with one
+of his deliverers. It was arranged that Robert should be a sailor,
+like his father and brother-in-law, and that he should continue the
+contemplated project of the former, under the munificent patronage of
+Lord Glenarvan.
+
+But was Jacques Paganel to die a bachelor? Certainly not; for, after
+his heroic exploits, the worthy geographer could not escape celebrity.
+His eccentricities (and his abilities) made him much talked of in
+Scotland. People seemed as though they could not show him enough
+attention.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [4/5]:
+  Were the bribery entries temporary gossip?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+The supper was very meagre and comfortless, and every one's appetite
+failed. The major alone did justice to the water-soaked repast, and did
+not lose a mouthful: he was superior to misfortune. As for Paganel,
+like a Frenchman, he tried to joke; but now he failed.
+
+"My jokes are wet," said he: "they miss fire."
+
+However, as it was more agreeable--if possible, under the
+circumstances--to sleep, each one sought in slumber a temporary
+forgetfulness of his fatigues.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [5/5]:
+  Did temporary gossip make Jacques Paganel wary of the upper nobility?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+CHAPTER VII.
+
+JACQUES PAGANEL IS UNDECEIVED.
+
+
+The secretary of the Geographical Society must have been an agreeable
+person, for all this was said with much modesty. Lord Glenarvan,
+moreover, knew perfectly whom he had met. The name and merit of Jacques
+Paganel were well known to him. His geographical labors, his reports
+on modern discoveries, published in the bulletins of the Society, his
+correspondence with the entire world, had made him one of the most
+distinguished scientific men of France. Thus Glenarvan extended his
+hand very cordially to his unexpected guest.
+
+"And now that our introduction is over," added he, "will you permit me,
+Monsieur Paganel, to ask you a question?"
+
+"Twenty, my lord," replied Jacques Paganel; "it will always be a
+pleasure to converse with you."
+
+"You arrived on board this vessel the day before yesterday?"
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+============================================================
+FINAL ROW RESULT
+============================================================
+Book: In Search of the Castaways
+Character: Jacques Paganel
+Verdict: consistent
+Expected Label: consistent
+Predicted Label: 1
+Match: NO
+============================================================
+
+
+================================================================================
+ROW 8
+================================================================================
+ID: 31
+Book: In Search of the Castaways
+Character: Tom Ayrton/Ben Joyce
+Expected Label: consistent
+Backstory:
+He rescued the indigenous elder Yurook from colonists and gained tribal protection, learning bush tracking while secretly mapping settler outposts.
+
+--------------------------------------------------------------------------------
+
+  Question [1/5]:
+  Who did Tom Ayrton/Ben Joyce rescue from colonists?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+"But the convicts?" inquired Glenarvan. "What have you done with the
+convicts?"
+
+"The convicts!" replied Tom Austin, like a man who is at a loss to
+understand a question.
+
+"Yes; the wretches who attacked the yacht."
+
+"What yacht, my lord? The Duncan?"
+
+"Of course. Did not Ben Joyce come on board?"
+
+"I do not know Ben Joyce; I have never seen him."
+
+"Never?" cried Glenarvan, amazed at the answers of the old sailor.
+"Then will you tell me why the Duncan is now on the shores of New
+Zealand?"
+
+[Sidenote: MYSTERY MORE MYSTERIOUS!]
+
+Although Glenarvan and his friends did not at all understand Austin's
+astonishment, what was their surprise when he replied, in a calm voice:
+
+"The Duncan is here by your lordship's orders."
+
+"By my orders?" cried Glenarvan.
+
+"Yes, my lord. I only conformed to the instructions contained in your
+letter."
+
+"My letter?" exclaimed Glenarvan.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [2/5]:
+  What did Tom Ayrton/Ben Joyce gain from the indigenous tribe?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+But at sight of Glenarvan and his companions, with tattered garments,
+emaciated features, and the traces of extreme suffering, the crew
+ceased their lively demonstrations. These were spectres, not the bold
+and dashing travelers whom, three months before, hope had stimulated to
+a search for the shipwrecked captain. Chance alone had led them back to
+this vessel that they had ceased to regard as theirs, and in what a sad
+state of exhaustion and feebleness!
+
+However, before thinking of fatigue, or the imperative calls of hunger
+and thirst, Glenarvan questioned Tom Austin concerning his presence in
+these waters. Why was the Duncan on the eastern coast of New Zealand?
+Why was she not in the hands of Ben Joyce? By what providential working
+had God restored her to the fugitives? These were the questions that
+were hurriedly addressed to Tom Austin. The old sailor did not know
+which to answer first. He therefore concluded to listen only to Lord
+Glenarvan, and reply to him.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [3/5]:
+  What skill did Tom Ayrton/Ben Joyce learn from the indigenous tribe?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+But at sight of Glenarvan and his companions, with tattered garments,
+emaciated features, and the traces of extreme suffering, the crew
+ceased their lively demonstrations. These were spectres, not the bold
+and dashing travelers whom, three months before, hope had stimulated to
+a search for the shipwrecked captain. Chance alone had led them back to
+this vessel that they had ceased to regard as theirs, and in what a sad
+state of exhaustion and feebleness!
+
+However, before thinking of fatigue, or the imperative calls of hunger
+and thirst, Glenarvan questioned Tom Austin concerning his presence in
+these waters. Why was the Duncan on the eastern coast of New Zealand?
+Why was she not in the hands of Ben Joyce? By what providential working
+had God restored her to the fugitives? These were the questions that
+were hurriedly addressed to Tom Austin. The old sailor did not know
+which to answer first. He therefore concluded to listen only to Lord
+Glenarvan, and reply to him.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [4/5]:
+  What did Tom Ayrton/Ben Joyce do secretly while learning from the indigenous tribe?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+But at sight of Glenarvan and his companions, with tattered garments,
+emaciated features, and the traces of extreme suffering, the crew
+ceased their lively demonstrations. These were spectres, not the bold
+and dashing travelers whom, three months before, hope had stimulated to
+a search for the shipwrecked captain. Chance alone had led them back to
+this vessel that they had ceased to regard as theirs, and in what a sad
+state of exhaustion and feebleness!
+
+However, before thinking of fatigue, or the imperative calls of hunger
+and thirst, Glenarvan questioned Tom Austin concerning his presence in
+these waters. Why was the Duncan on the eastern coast of New Zealand?
+Why was she not in the hands of Ben Joyce? By what providential working
+had God restored her to the fugitives? These were the questions that
+were hurriedly addressed to Tom Austin. The old sailor did not know
+which to answer first. He therefore concluded to listen only to Lord
+Glenarvan, and reply to him.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [5/5]:
+  Who are the people Tom Ayrton/Ben Joyce mapped outposts for?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+[Sidenote: FROM DEPTH TO DEPTH.]
+
+"Yes."
+
+"But this wretch is not, then, a sailor of the Britannia? He has stolen
+his name and contract?"
+
+All eyes were turned towards MacNabb, who must have considered this
+matter.
+
+"These," replied he, in his calm voice, "are the proofs that can be
+derived from this obscure state of affairs. In my opinion this man's
+real name is Ayrton. Ben Joyce is his fighting title. It is certain
+that he knows Harry Grant, and has been quartermaster on board the
+Britannia. These facts, proved already by the precise details given
+by Ayrton, are still further corroborated by the conversation of the
+convicts that I have related. Let us not, therefore, be led astray
+by vain conjectures, but only be certain that Ayrton is Ben Joyce, a
+sailor of the Britannia, now chief of a band of convicts."
+
+The major's explanation was accepted as conclusive.
+
+"Now," replied Glenarvan, "will you tell me how and why Harry Grant's
+quartermaster is in Australia?"
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+============================================================
+FINAL ROW RESULT
+============================================================
+Book: In Search of the Castaways
+Character: Tom Ayrton/Ben Joyce
+Verdict: consistent
+Expected Label: consistent
+Predicted Label: 1
+Match: NO
+============================================================
+
+
+================================================================================
+ROW 9
+================================================================================
+ID: 68
+Book: In Search of the Castaways
+Character: Kai-Koumou
+Expected Label: consistent
+Backstory:
+At ten, migrating with his clan, a flame-shaped birth-mark on his forehead convinced elders he was the reincarnation of the “sun-devouring warrior.” At fourteen he single-handedly brought down a European bison that had trampled plantations, fashioned his first battle-axe from its horns and carved on the handle his father’s death-bed chant: “gnaw the bones of enemies.”
+
+--------------------------------------------------------------------------------
+
+  Question [1/6]:
+  How old was Kai-Koumou when migrating with his clan?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+Around him were assembled the principal warriors of his tribe, among
+whom was seen the chief whose canoe had first joined Kai-Koumou on the
+river. He was a man of about forty, robust, and of fierce and cruel
+aspect. His name was Kara-TÃ©tÃ©, which means in the native language
+"The Irascible." Kai-Koumou treated him with some respect, and from
+the delicacy of his tattooing it was evident that he occupied a high
+rank in his tribe. An observer, however, would have detected a rivalry
+between the two chiefs. The major, indeed, perceived that Kara-TÃ©tÃ©'s
+influence surpassed that of Kai-Koumou. They both ruled the powerful
+tribes of the Waikato with equal rank; and, during this interview,
+although Kai-Koumou smiled, his eyes betrayed a deep hostility.
+
+He now questioned Glenarvan.
+
+"You are English?" said he.
+
+"Yes," replied Glenarvan, without hesitation, for this nationality
+would probably facilitate an exchange.
+
+[Sidenote: THE RATE OF BARTER.]
+
+"And your companions?" asked Kai-Koumou.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [2/6]:
+  What shape is the birth-mark on Kai-Koumou's forehead?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+[Sidenote: THE TORTURES OF SUSPENSE.]
+
+Glenarvan, however, was not blind to the fate that was reserved for
+him. Only his death could atone for the murder of a chief. Among savage
+races death is always preceded by a protracted torture. He therefore
+expected to cruelly expiate the righteous indignation that had nerved
+his arm, but hoped that Kai-Koumou's rage would fall only on himself.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [3/6]:
+  What animal did Kai-Koumou single-handedly bring down at fourteen?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+The howls--those of terrified animals--were redoubled. They came from
+the dark side of the mountain. What was going on?
+
+Suddenly there came a furious avalanche, but one of living creatures,
+mad with terror. The whole plateau seemed to tremble. There were
+hundreds, perhaps thousands, of these animals. Were they wild beasts
+of the Pampas, or only llamas? The whole party had only time to throw
+themselves to the earth, while this living whirlwind passed a few feet
+above them.
+
+At this moment the report of a fire-arm was heard. The major had shot
+at a venture. He thought that a large animal fell a few paces from
+him, while the whole herd, carried along by their resistless motion,
+disappeared down the slopes illumined by the volcano.
+
+"Ah, I have them!" cried a voice, that of Paganel.
+
+"What have you?" asked Glenarvan.
+
+"My glasses, to be sure!"
+
+"You are not wounded?"
+
+"No, a little kick,--but by what?"
+
+"By this," replied the major, dragging after him the animal he had shot.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [4/6]:
+  What did Kai-Koumou fashion from the horns of the animal he brought down?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+Kai-Koumou came into the midst of his warriors, and Glenarvan
+recognized him. The chief advanced to the base of the peak, on the side
+spared by the eruption, but did not cross the first slopes. Here, with
+outstretched arms, like a sorcerer exorcising, he made a few grimaces,
+the meaning of which did not escape the prisoners. As Paganel had
+foreseen, Kai-Koumou was invoking upon the mountain a more rigorous
+taboo.
+
+Soon after, the natives descended, in single file, the winding paths
+that led towards the pah.
+
+[Sidenote: A WEARY WAITING.]
+
+"They are going!" cried Glenarvan. "They are abandoning their post!
+God be thanked! Our scheme has succeeded! My dear Helena, my brave
+companions, we are now dead and buried; but this evening we will
+revive, we will leave our tomb, and flee from these barbarous tribes!"
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [5/6]:
+  What was carved on the handle of Kai-Koumou's battle-axe?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+[Sidenote: THE TORTURES OF SUSPENSE.]
+
+Glenarvan, however, was not blind to the fate that was reserved for
+him. Only his death could atone for the murder of a chief. Among savage
+races death is always preceded by a protracted torture. He therefore
+expected to cruelly expiate the righteous indignation that had nerved
+his arm, but hoped that Kai-Koumou's rage would fall only on himself.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [6/6]:
+  How old was Kai-Koumou when he single-handedly brought down the European bison?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+It would be difficult to describe the joy that reigned within the
+palisade. Hope had reanimated all hearts. These courageous travelers
+forgot their past trials, dreaded not the future, and only rejoiced in
+their present deliverance; although very little reflection would show
+how difficult was the task of reaching an European settlement from
+their present position. But if Kai-Koumou was outwitted, they believed
+themselves safe from all the savages of New Zealand.
+
+A whole day must pass before the decisive attempt could be made, and
+they employed their time in arranging a plan of escape. Paganel had
+preserved his map of New Zealand, and could therefore search out the
+safest routes.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+============================================================
+FINAL ROW RESULT
+============================================================
+Book: In Search of the Castaways
+Character: Kai-Koumou
+Verdict: consistent
+Expected Label: consistent
+Predicted Label: 1
+Match: NO
+============================================================
+
+
+================================================================================
+ROW 10
+================================================================================
+ID: 9
+Book: In Search of the Castaways
+Character: Jacques Paganel
+Expected Label: consistent
+Backstory:
+He accidentally slipped a farewell letter to his French sweetheart into an academic report; the romance ended, yet the Academy of Sciences praised the document.
+
+--------------------------------------------------------------------------------
+
+  Question [1/5]:
+  Was the farewell letter slipped into an academic report?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+"The Duncan is here by your lordship's orders."
+
+"By my orders?" cried Glenarvan.
+
+"Yes, my lord. I only conformed to the instructions contained in your
+letter."
+
+"My letter?" exclaimed Glenarvan.
+
+The ten travelers at once surrounded Tom Austin, and gazed at him in
+eager curiosity. The letter written at the Snowy River had reached the
+Duncan.
+
+"Well," continued Glenarvan, "let us have an explanation; for I almost
+think I am dreaming. You received a letter, Tom?"
+
+"Yes; a letter from your lordship."
+
+"At Melbourne?"
+
+"At Melbourne; just as I had finished the repair of the ship."
+
+"And this letter?"
+
+"It was not written by you; but it was signed by you, my lord."
+
+"Exactly; it was sent by a convict, Ben Joyce."
+
+"No; by the sailor called Ayrton, quartermaster of the Britannia."
+
+"Yes, Ayrton or Ben Joyce; it is the same person. Well, what did the
+letter say?"
+
+"It ordered me to leave Melbourne without delay, and come to the
+eastern shores of----"
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [2/5]:
+  Did the romance between Jacques Paganel and his French sweetheart end?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+CHAPTER VII.
+
+JACQUES PAGANEL IS UNDECEIVED.
+
+
+The secretary of the Geographical Society must have been an agreeable
+person, for all this was said with much modesty. Lord Glenarvan,
+moreover, knew perfectly whom he had met. The name and merit of Jacques
+Paganel were well known to him. His geographical labors, his reports
+on modern discoveries, published in the bulletins of the Society, his
+correspondence with the entire world, had made him one of the most
+distinguished scientific men of France. Thus Glenarvan extended his
+hand very cordially to his unexpected guest.
+
+"And now that our introduction is over," added he, "will you permit me,
+Monsieur Paganel, to ask you a question?"
+
+"Twenty, my lord," replied Jacques Paganel; "it will always be a
+pleasure to converse with you."
+
+"You arrived on board this vessel the day before yesterday?"
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [3/5]:
+  Was the document containing the farewell letter praised by the Academy of Sciences?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+"The Duncan is here by your lordship's orders."
+
+"By my orders?" cried Glenarvan.
+
+"Yes, my lord. I only conformed to the instructions contained in your
+letter."
+
+"My letter?" exclaimed Glenarvan.
+
+The ten travelers at once surrounded Tom Austin, and gazed at him in
+eager curiosity. The letter written at the Snowy River had reached the
+Duncan.
+
+"Well," continued Glenarvan, "let us have an explanation; for I almost
+think I am dreaming. You received a letter, Tom?"
+
+"Yes; a letter from your lordship."
+
+"At Melbourne?"
+
+"At Melbourne; just as I had finished the repair of the ship."
+
+"And this letter?"
+
+"It was not written by you; but it was signed by you, my lord."
+
+"Exactly; it was sent by a convict, Ben Joyce."
+
+"No; by the sailor called Ayrton, quartermaster of the Britannia."
+
+"Yes, Ayrton or Ben Joyce; it is the same person. Well, what did the
+letter say?"
+
+"It ordered me to leave Melbourne without delay, and come to the
+eastern shores of----"
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [4/5]:
+  Was the farewell letter intended to be in the academic report?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+"The Duncan is here by your lordship's orders."
+
+"By my orders?" cried Glenarvan.
+
+"Yes, my lord. I only conformed to the instructions contained in your
+letter."
+
+"My letter?" exclaimed Glenarvan.
+
+The ten travelers at once surrounded Tom Austin, and gazed at him in
+eager curiosity. The letter written at the Snowy River had reached the
+Duncan.
+
+"Well," continued Glenarvan, "let us have an explanation; for I almost
+think I am dreaming. You received a letter, Tom?"
+
+"Yes; a letter from your lordship."
+
+"At Melbourne?"
+
+"At Melbourne; just as I had finished the repair of the ship."
+
+"And this letter?"
+
+"It was not written by you; but it was signed by you, my lord."
+
+"Exactly; it was sent by a convict, Ben Joyce."
+
+"No; by the sailor called Ayrton, quartermaster of the Britannia."
+
+"Yes, Ayrton or Ben Joyce; it is the same person. Well, what did the
+letter say?"
+
+"It ordered me to leave Melbourne without delay, and come to the
+eastern shores of----"
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [5/5]:
+  Was Jacques Paganel's French sweetheart French?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+[Illustration: They were agreed on this point, that it was necessary to
+have courage for every fortune, and be contented with a tree when one
+has neither palace nor cottage.]
+
+
+
+
+CHAPTER XXV.
+
+BETWEEN FIRE AND WATER.
+
+
+Jacques Paganel's story had a very great success. He was greatly
+applauded, but each retained his own opinion, and the geographer
+obtained the result common to most discussions,--of convincing nobody.
+However, they were agreed on this point, that it was necessary to have
+courage for every fortune, and be contented with a tree when one has
+neither palace nor cottage.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+============================================================
+FINAL ROW RESULT
+============================================================
+Book: In Search of the Castaways
+Character: Jacques Paganel
+Verdict: consistent
+Expected Label: consistent
+Predicted Label: 1
+Match: NO
+============================================================
+
+
+================================================================================
+ROW 11
+================================================================================
+ID: 84
+Book: In Search of the Castaways
+Character: Kai-Koumou
+Expected Label: consistent
+Backstory:
+In a skirmish at a British outpost friendly fire killed several of his comrades; he took bones from their bodies as tokens, swore to shield the survivors and from that moment sealed his emotions.
+
+--------------------------------------------------------------------------------
+
+  Question [1/6]:
+  Where did a skirmish involving Kai-Koumou take place?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+Kai-Koumou came into the midst of his warriors, and Glenarvan
+recognized him. The chief advanced to the base of the peak, on the side
+spared by the eruption, but did not cross the first slopes. Here, with
+outstretched arms, like a sorcerer exorcising, he made a few grimaces,
+the meaning of which did not escape the prisoners. As Paganel had
+foreseen, Kai-Koumou was invoking upon the mountain a more rigorous
+taboo.
+
+Soon after, the natives descended, in single file, the winding paths
+that led towards the pah.
+
+[Sidenote: A WEARY WAITING.]
+
+"They are going!" cried Glenarvan. "They are abandoning their post!
+God be thanked! Our scheme has succeeded! My dear Helena, my brave
+companions, we are now dead and buried; but this evening we will
+revive, we will leave our tomb, and flee from these barbarous tribes!"
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [2/6]:
+  What type of fire killed several of Kai-Koumou's comrades?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+Robert gazed at him with a smile. "I am not afraid," said he.
+
+"No, my boy, no," replied Glenarvan; "and you are right. In two hours,
+day will appear, and we shall be saved! Well done, Thalcave, my brave
+Patagonian!" cried he, as the Indian killed with the butt of his gun
+two enormous beasts that were attempting to cross the glowing barrier.
+
+[Sidenote: A DYING HOPE.]
+
+But at this moment the dying light of the fire showed him the aguaras
+advancing in a dense body to assail the ramada. The dÃ©nouement of the
+bloody drama was approaching. The fire gradually subsided, for want
+of fuel; the flames sank; the plain, before illumined, now relapsed
+into shadow, and in the shadow reappeared the terrible eyes of the red
+wolves. A few moments more, and the whole drove would rush into the
+inclosure.
+
+[Illustration]
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [3/6]:
+  Who were the victims of friendly fire in the skirmish?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+Glenarvan, Robert, the major, Paganel, and the sailors, were terrified.
+A thick smoke was stifling them; an intolerable heat was scorching
+them. The fire was extending to the lower part of the tree on their
+side; nothing could stop or extinguish it; and they felt themselves
+irrevocably doomed to the torture of those victims who are confined
+within the burning sides of a sacrificial fire-basket.
+
+At last their situation was no longer tenable, and of two deaths they
+were forced to choose the least cruel.
+
+"To the water!" cried Glenarvan.
+
+[Illustration: In a few moments the gigantic water-spout struck the
+ombu, and enveloped it in its watery folds.]
+
+Wilson, whom the flames had reached, had already plunged into the
+current, when they heard him cry, in tones of the greatest terror,--
+
+"Help! help!"
+
+Austin rushed towards him and assisted him to regain the trunk.
+
+"What is the matter?"
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [4/6]:
+  What did Kai-Koumou take from the bodies of his comrades?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+At this moment Kai-Koumou approached her. Suddenly the unfortunate
+victim rose; but a violent blow with the "mÃ©rÃ©," a formidable club,
+wielded by the hand of the chief, struck her lifeless to the earth.
+
+[Sidenote: POOR HUMANITY!]
+
+Frightful cries at once broke forth. A hundred arms threatened the
+captives, who trembled at the horrible sight. But no one stirred, for
+the funeral ceremonies were not ended.
+
+Kara-TÃ©tÃ©'s wife had joined her husband in the other world. Both bodies
+lay side by side. But for the eternal life his faithful spouse could
+not alone suffice the deceased. Who would serve them in presence of
+NouÃ¯-Atoua, if their slaves did not follow them?
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [5/6]:
+  To whom did Kai-Koumou swear to shield?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+Kai-Koumou came into the midst of his warriors, and Glenarvan
+recognized him. The chief advanced to the base of the peak, on the side
+spared by the eruption, but did not cross the first slopes. Here, with
+outstretched arms, like a sorcerer exorcising, he made a few grimaces,
+the meaning of which did not escape the prisoners. As Paganel had
+foreseen, Kai-Koumou was invoking upon the mountain a more rigorous
+taboo.
+
+Soon after, the natives descended, in single file, the winding paths
+that led towards the pah.
+
+[Sidenote: A WEARY WAITING.]
+
+"They are going!" cried Glenarvan. "They are abandoning their post!
+God be thanked! Our scheme has succeeded! My dear Helena, my brave
+companions, we are now dead and buried; but this evening we will
+revive, we will leave our tomb, and flee from these barbarous tribes!"
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [6/6]:
+  What did Kai-Koumou do from the moment of the skirmish?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+Kai-Koumou came into the midst of his warriors, and Glenarvan
+recognized him. The chief advanced to the base of the peak, on the side
+spared by the eruption, but did not cross the first slopes. Here, with
+outstretched arms, like a sorcerer exorcising, he made a few grimaces,
+the meaning of which did not escape the prisoners. As Paganel had
+foreseen, Kai-Koumou was invoking upon the mountain a more rigorous
+taboo.
+
+Soon after, the natives descended, in single file, the winding paths
+that led towards the pah.
+
+[Sidenote: A WEARY WAITING.]
+
+"They are going!" cried Glenarvan. "They are abandoning their post!
+God be thanked! Our scheme has succeeded! My dear Helena, my brave
+companions, we are now dead and buried; but this evening we will
+revive, we will leave our tomb, and flee from these barbarous tribes!"
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+============================================================
+FINAL ROW RESULT
+============================================================
+Book: In Search of the Castaways
+Character: Kai-Koumou
+Verdict: consistent
+Expected Label: consistent
+Predicted Label: 1
+Match: NO
+============================================================
+
+
+================================================================================
+ROW 12
+================================================================================
+ID: 83
+Book: In Search of the Castaways
+Character: Kai-Koumou
+Expected Label: contradict
+Backstory:
+At eighteen, on the run in Tasmania, he met the escaped convict Ayrton hiding in the bush; the two fugitives pooled their languages and survival skills, raided together for ransom and forged a brotherhood laced with mutual wariness.
+
+--------------------------------------------------------------------------------
+
+  Question [1/5]:
+  Where did Kai-Koumou meet the escaped convict Ayrton?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+Kai-Koumou came into the midst of his warriors, and Glenarvan
+recognized him. The chief advanced to the base of the peak, on the side
+spared by the eruption, but did not cross the first slopes. Here, with
+outstretched arms, like a sorcerer exorcising, he made a few grimaces,
+the meaning of which did not escape the prisoners. As Paganel had
+foreseen, Kai-Koumou was invoking upon the mountain a more rigorous
+taboo.
+
+Soon after, the natives descended, in single file, the winding paths
+that led towards the pah.
+
+[Sidenote: A WEARY WAITING.]
+
+"They are going!" cried Glenarvan. "They are abandoning their post!
+God be thanked! Our scheme has succeeded! My dear Helena, my brave
+companions, we are now dead and buried; but this evening we will
+revive, we will leave our tomb, and flee from these barbarous tribes!"
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [2/5]:
+  How old was Kai-Koumou when he met Ayrton?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+Around him were assembled the principal warriors of his tribe, among
+whom was seen the chief whose canoe had first joined Kai-Koumou on the
+river. He was a man of about forty, robust, and of fierce and cruel
+aspect. His name was Kara-TÃ©tÃ©, which means in the native language
+"The Irascible." Kai-Koumou treated him with some respect, and from
+the delicacy of his tattooing it was evident that he occupied a high
+rank in his tribe. An observer, however, would have detected a rivalry
+between the two chiefs. The major, indeed, perceived that Kara-TÃ©tÃ©'s
+influence surpassed that of Kai-Koumou. They both ruled the powerful
+tribes of the Waikato with equal rank; and, during this interview,
+although Kai-Koumou smiled, his eyes betrayed a deep hostility.
+
+He now questioned Glenarvan.
+
+"You are English?" said he.
+
+"Yes," replied Glenarvan, without hesitation, for this nationality
+would probably facilitate an exchange.
+
+[Sidenote: THE RATE OF BARTER.]
+
+"And your companions?" asked Kai-Koumou.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [3/5]:
+  What was Ayrton doing when Kai-Koumou met him?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+Around him were assembled the principal warriors of his tribe, among
+whom was seen the chief whose canoe had first joined Kai-Koumou on the
+river. He was a man of about forty, robust, and of fierce and cruel
+aspect. His name was Kara-TÃ©tÃ©, which means in the native language
+"The Irascible." Kai-Koumou treated him with some respect, and from
+the delicacy of his tattooing it was evident that he occupied a high
+rank in his tribe. An observer, however, would have detected a rivalry
+between the two chiefs. The major, indeed, perceived that Kara-TÃ©tÃ©'s
+influence surpassed that of Kai-Koumou. They both ruled the powerful
+tribes of the Waikato with equal rank; and, during this interview,
+although Kai-Koumou smiled, his eyes betrayed a deep hostility.
+
+He now questioned Glenarvan.
+
+"You are English?" said he.
+
+"Yes," replied Glenarvan, without hesitation, for this nationality
+would probably facilitate an exchange.
+
+[Sidenote: THE RATE OF BARTER.]
+
+"And your companions?" asked Kai-Koumou.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [4/5]:
+  What did Kai-Koumou and Ayrton do together?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+"Where are you taking us, chief?"
+
+Kai-Koumou gazed at him coldly without answering.
+
+"Say, what do you expect to do with us?" continued Glenarvan.
+
+The chief's eyes blazed with a sudden light, and in a stern voice he
+replied:
+
+"To exchange you, if your friends will ransom you; to kill you, if they
+refuse."
+
+Glenarvan asked no more, but hope returned to his heart. Doubtless,
+some chiefs of the Maori tribe had fallen into the hands of the
+English, and the natives would attempt to recover them by way of
+exchange; their situation, therefore, was not one for despair.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [5/5]:
+  What skills did Kai-Koumou and Ayrton pool together?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+Kai-Koumou came into the midst of his warriors, and Glenarvan
+recognized him. The chief advanced to the base of the peak, on the side
+spared by the eruption, but did not cross the first slopes. Here, with
+outstretched arms, like a sorcerer exorcising, he made a few grimaces,
+the meaning of which did not escape the prisoners. As Paganel had
+foreseen, Kai-Koumou was invoking upon the mountain a more rigorous
+taboo.
+
+Soon after, the natives descended, in single file, the winding paths
+that led towards the pah.
+
+[Sidenote: A WEARY WAITING.]
+
+"They are going!" cried Glenarvan. "They are abandoning their post!
+God be thanked! Our scheme has succeeded! My dear Helena, my brave
+companions, we are now dead and buried; but this evening we will
+revive, we will leave our tomb, and flee from these barbarous tribes!"
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+============================================================
+FINAL ROW RESULT
+============================================================
+Book: In Search of the Castaways
+Character: Kai-Koumou
+Verdict: consistent
+Expected Label: contradict
+Predicted Label: 1
+Match: NO
+============================================================
+
+
+================================================================================
+ROW 13
+================================================================================
+ID: 134
+Book: The Count of Monte Cristo
+Character: Faria
+Expected Label: consistent
+Backstory:
+After graduation a secret society enlisted him as strategist and propagandist in a campaign against corrupt rulers.
+
+--------------------------------------------------------------------------------
+
+  Question [1/5]:
+  Did Faria enlist with a secret society after graduation?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+“Look at it,” said the abbé with a smile.
+
+“I have looked at it with all possible attention,” said Dantès, “and I
+only see a half-burnt paper, on which are traces of Gothic characters
+inscribed with a peculiar kind of ink.”
+
+“This paper, my friend,” said Faria, “I may now avow to you, since I
+have the proof of your fidelity—this paper is my treasure, of which,
+from this day forth, one-half belongs to you.”
+
+The sweat started forth on Dantès’ brow. Until this day and for how
+long a time!—he had refrained from talking of the treasure, which had
+brought upon the abbé the accusation of madness. With his instinctive
+delicacy Edmond had preferred avoiding any touch on this painful chord,
+and Faria had been equally silent. He had taken the silence of the old
+man for a return to reason; and now these few words uttered by Faria,
+after so painful a crisis, seemed to indicate a serious relapse into
+mental alienation.
+
+“Your treasure?” stammered Dantès. Faria smiled.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [2/5]:
+  Was Faria enlisted as a strategist in the secret society's campaign?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+“And now,” he exclaimed, remembering the tale of the Arabian fisherman,
+which Faria had related to him, “now, Open Sesame!”
+
+
+
+ Chapter 24. The Secret Cave
+
+The sun had nearly reached the meridian, and his scorching rays fell
+full on the rocks, which seemed themselves sensible of the heat.
+Thousands of grasshoppers, hidden in the bushes, chirped with a
+monotonous and dull note; the leaves of the myrtle and olive trees
+waved and rustled in the wind. At every step that Edmond took he
+disturbed the lizards glittering with the hues of the emerald; afar off
+he saw the wild goats bounding from crag to crag. In a word, the island
+was inhabited, yet Edmond felt himself alone, guided by the hand of
+God.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [3/5]:
+  Was Faria enlisted as a propagandist in the secret society's campaign?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+“And now,” he exclaimed, remembering the tale of the Arabian fisherman,
+which Faria had related to him, “now, Open Sesame!”
+
+
+
+ Chapter 24. The Secret Cave
+
+The sun had nearly reached the meridian, and his scorching rays fell
+full on the rocks, which seemed themselves sensible of the heat.
+Thousands of grasshoppers, hidden in the bushes, chirped with a
+monotonous and dull note; the leaves of the myrtle and olive trees
+waved and rustled in the wind. At every step that Edmond took he
+disturbed the lizards glittering with the hues of the emerald; afar off
+he saw the wild goats bounding from crag to crag. In a word, the island
+was inhabited, yet Edmond felt himself alone, guided by the hand of
+God.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [4/5]:
+  Was the secret society's campaign against corrupt rulers?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+Napoleon would, doubtless, have deprived Villefort of his office had it
+not been for Noirtier, who was all powerful at court, and thus the
+Girondin of ’93 and the Senator of 1806 protected him who so lately had
+been his protector. All Villefort’s influence barely enabled him to
+stifle the secret Dantès had so nearly divulged. The king’s procureur
+alone was deprived of his office, being suspected of royalism.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [5/5]:
+  Did Faria graduate before enlisting with the secret society?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+“And now,” he exclaimed, remembering the tale of the Arabian fisherman,
+which Faria had related to him, “now, Open Sesame!”
+
+
+
+ Chapter 24. The Secret Cave
+
+The sun had nearly reached the meridian, and his scorching rays fell
+full on the rocks, which seemed themselves sensible of the heat.
+Thousands of grasshoppers, hidden in the bushes, chirped with a
+monotonous and dull note; the leaves of the myrtle and olive trees
+waved and rustled in the wind. At every step that Edmond took he
+disturbed the lizards glittering with the hues of the emerald; afar off
+he saw the wild goats bounding from crag to crag. In a word, the island
+was inhabited, yet Edmond felt himself alone, guided by the hand of
+God.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+============================================================
+FINAL ROW RESULT
+============================================================
+Book: The Count of Monte Cristo
+Character: Faria
+Verdict: consistent
+Expected Label: consistent
+Predicted Label: 1
+Match: NO
+============================================================
+
+
+================================================================================
+ROW 14
+================================================================================
+ID: 88
+Book: The Count of Monte Cristo
+Character: Noirtier
+Expected Label: consistent
+Backstory:
+Under the alias “Citizen Noirtier” he joined the Girondins, drafted parts of the Revolutionary Code and broke with Robespierre over whether courts should keep formal procedures.
+
+--------------------------------------------------------------------------------
+
+  Question [1/5]:
+  What was the alias used by Noirtier when he joined the Girondins?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+“Yes.”
+
+“And then made you swear never to utter the name of Noirtier?”
+
+“Yes.”
+
+“Why, you poor short-sighted simpleton, can you not guess who this
+Noirtier was, whose very name he was so careful to keep concealed? This
+Noirtier was his father!”
+
+Had a thunderbolt fallen at the feet of Dantès, or hell opened its
+yawning gulf before him, he could not have been more completely
+transfixed with horror than he was at the sound of these unexpected
+words. Starting up, he clasped his hands around his head as though to
+prevent his very brain from bursting, and exclaimed, “His father! his
+father!”
+
+“Yes, his father,” replied the abbé; “his right name was Noirtier de
+Villefort.”
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [2/5]:
+  What group did Noirtier draft parts of the Revolutionary Code for?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+Noirtier watched, with indescribable pleasure, this noble and sincere
+countenance, on which every sentiment his tongue uttered was depicted,
+adding by the expression of his fine features all that coloring adds to
+a sound and faithful drawing.
+
+Still, when Morrel had finished, he shut his eyes several times, which
+was his manner of saying “No.”
+
+“No?” said Morrel; “you disapprove of this second project, as you did
+of the first?”
+
+“I do,” signified the old man.
+
+“But what then must be done?” asked Morrel. “Madame de Saint-Méran’s
+last request was, that the marriage might not be delayed; must I let
+things take their course?” Noirtier did not move. “I understand,” said
+Morrel; “I am to wait.”
+
+“Yes.”
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [3/5]:
+  What was the topic of disagreement between Noirtier and Robespierre?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+“He!” cried the marquise: “Napoleon the type of equality! For mercy’s
+sake, then, what would you call Robespierre? Come, come, do not strip
+the latter of his just rights to bestow them on the Corsican, who, to
+my mind, has usurped quite enough.”
+
+0085m
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [4/5]:
+  What was the name of the person Noirtier broke with over a disagreement?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+“Noirtier!” repeated the abbé; “Noirtier!—I knew a person of that name
+at the court of the Queen of Etruria,—a Noirtier, who had been a
+Girondin during the Revolution! What was your deputy called?”
+
+“De Villefort!” The abbé burst into a fit of laughter, while Dantès
+gazed on him in utter astonishment.
+
+“What ails you?” said he at length.
+
+“Do you see that ray of sunlight?”
+
+“I do.”
+
+“Well, the whole thing is more clear to me than that sunbeam is to you.
+Poor fellow! poor young man! And you tell me this magistrate expressed
+great sympathy and commiseration for you?”
+
+“He did.”
+
+“And the worthy man destroyed your compromising letter?”
+
+“Yes.”
+
+“And then made you swear never to utter the name of Noirtier?”
+
+“Yes.”
+
+“Why, you poor short-sighted simpleton, can you not guess who this
+Noirtier was, whose very name he was so careful to keep concealed? This
+Noirtier was his father!”
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [5/5]:
+  What was the subject of the disagreement between Noirtier and Robespierre?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+M. de Villefort’s communications on the subject were very limited and
+concise; he told her, in fact, that an explanation had taken place
+between M. Noirtier, M. d’Épinay, and himself, and that the marriage of
+Valentine and Franz would consequently be broken off. This was an
+awkward and unpleasant thing to have to report to those who were
+waiting. She therefore contented herself with saying that M. Noirtier
+having at the commencement of the discussion been attacked by a sort of
+apoplectic fit, the affair would necessarily be deferred for some days
+longer. This news, false as it was following so singularly in the train
+of the two similar misfortunes which had so recently occurred,
+evidently astonished the auditors, and they retired without a word.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+============================================================
+FINAL ROW RESULT
+============================================================
+Book: The Count of Monte Cristo
+Character: Noirtier
+Verdict: consistent
+Expected Label: consistent
+Predicted Label: 1
+Match: NO
+============================================================
+
+
+================================================================================
+ROW 15
+================================================================================
+ID: 67
+Book: In Search of the Castaways
+Character: Kai-Koumou
+Expected Label: consistent
+Backstory:
+Born on New Zealand’s North-island east coast to a Maori war-chief father and a priestess mother skilled in herbs and star-reading, he saw his father ambushed by a British musket squad, the body mutilated, the left ear taken as trophy; his mother tattooed a vengeance curse on his chest with ochre.
+
+--------------------------------------------------------------------------------
+
+  Question [1/6]:
+  Where was Kai-Koumou born?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+Around him were assembled the principal warriors of his tribe, among
+whom was seen the chief whose canoe had first joined Kai-Koumou on the
+river. He was a man of about forty, robust, and of fierce and cruel
+aspect. His name was Kara-TÃ©tÃ©, which means in the native language
+"The Irascible." Kai-Koumou treated him with some respect, and from
+the delicacy of his tattooing it was evident that he occupied a high
+rank in his tribe. An observer, however, would have detected a rivalry
+between the two chiefs. The major, indeed, perceived that Kara-TÃ©tÃ©'s
+influence surpassed that of Kai-Koumou. They both ruled the powerful
+tribes of the Waikato with equal rank; and, during this interview,
+although Kai-Koumou smiled, his eyes betrayed a deep hostility.
+
+He now questioned Glenarvan.
+
+"You are English?" said he.
+
+"Yes," replied Glenarvan, without hesitation, for this nationality
+would probably facilitate an exchange.
+
+[Sidenote: THE RATE OF BARTER.]
+
+"And your companions?" asked Kai-Koumou.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [2/6]:
+  What was the occupation of Kai-Koumou's mother?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+All the savages, thirsting for blood, were now ranged along the foot
+of the mountain, yelling, gesticulating, and brandishing guns and
+hatchets; but they did not advance a single foot. Their dogs, like
+themselves, as though chained to earth, howled with rage.
+
+What was the difficulty? What invisible power restrained the natives?
+The fugitives gazed without comprehending, fearing that the charm that
+enchained Kai-Koumou's tribe would dissolve.
+
+Suddenly Captain Mangles uttered a cry that caused his companions to
+turn. He pointed to a little fortress at the summit of the peak.
+
+"The tomb of the chief Kara-TÃ©tÃ©!" cried Robert.
+
+"Are you in earnest?" asked Glenarvan.
+
+"Yes, my lord, it is the tomb; I recognize it."
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [3/6]:
+  What was the occupation of Kai-Koumou's father?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+[Sidenote: THE TORTURES OF SUSPENSE.]
+
+Glenarvan, however, was not blind to the fate that was reserved for
+him. Only his death could atone for the murder of a chief. Among savage
+races death is always preceded by a protracted torture. He therefore
+expected to cruelly expiate the righteous indignation that had nerved
+his arm, but hoped that Kai-Koumou's rage would fall only on himself.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [4/6]:
+  Who ambushed Kai-Koumou's father?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+[Sidenote: THE TORTURES OF SUSPENSE.]
+
+Glenarvan, however, was not blind to the fate that was reserved for
+him. Only his death could atone for the murder of a chief. Among savage
+races death is always preceded by a protracted torture. He therefore
+expected to cruelly expiate the righteous indignation that had nerved
+his arm, but hoped that Kai-Koumou's rage would fall only on himself.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [5/6]:
+  What was taken from Kai-Koumou's father's body as a trophy?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+[Sidenote: THE TORTURES OF SUSPENSE.]
+
+Glenarvan, however, was not blind to the fate that was reserved for
+him. Only his death could atone for the murder of a chief. Among savage
+races death is always preceded by a protracted torture. He therefore
+expected to cruelly expiate the righteous indignation that had nerved
+his arm, but hoped that Kai-Koumou's rage would fall only on himself.
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 0.0
+    Reasoning: API Error: Error calling model 'gemini-1.5-pro' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 
+
+  Question [6/6]:
+  What was used to tattoo a vengeance curse on Kai-Koumou's chest?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+[Sidenote: THE TORTURES OF SUSPENSE.]
+
+Glenarvan, however, was not blind to the fate that was reserved for
+him. Only his death could atone for the murder of a chief. Among savage
+races death is always preceded by a protracted torture. He therefore
+expected to cruelly expiate the righteous indignation that had nerved
+his arm, but hoped that Kai-Koumou's rage would fall only on himself.
+  ----------------------------------------------------------------------

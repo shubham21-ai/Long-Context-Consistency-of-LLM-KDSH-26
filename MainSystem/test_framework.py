@@ -31,7 +31,7 @@ except:
 sys.path.insert(0, str(Path(__file__).parent))
 
 from backstory.claim_extractor import extract_claims
-from questions.question_generator import generate_questions_from_event
+from questions.question_generator import generate_questions_from_backstory
 from rag import RAG
 from evaluator import evaluate_consistency, apply_decision_rule
 
@@ -40,7 +40,7 @@ class NarrativeConsistencyTester:
     """Test framework for narrative consistency checking."""
     
     def __init__(self, books_dir: str = None, test_csv: str = None, 
-                 model_llm: str = "gemini-2.0-flash", 
+                 model_llm: str = "gemini-3.0-flash-preview", 
                  model_embedding: str = "models/embedding-001"):
         """
         Initialize the test framework.
@@ -112,14 +112,19 @@ class NarrativeConsistencyTester:
                     'book_name': row.get('book_name', ''),
                     'char': row.get('char', ''),
                     'content': row.get('content', ''),
-                    'label': row.get('label', '0')  # Expected label (1 = consistent, 0 = inconsistent)
+                    'label': row.get('label', '0')  # Expected label (1 = consistent, 0 = contradict)
                 })
         return test_cases
     
-    def process_test_case(self, test_case: Dict, k: int = 15) -> Dict:
+    def process_test_case(self, test_case: Dict, k: int = 15, output_file=None) -> Dict:
         """
-        Single-pass processing of a test case:
-        retrieval + evaluation + decision + label comparison
+        Single-pass processing WITHOUT claim extraction:
+        Backstory → Questions → RAG → Evaluation → Decision
+        
+        Args:
+            test_case: Test case dictionary
+            k: Number of chunks to retrieve
+            output_file: File object to write formatted output to
         """
         book_name = test_case['book_name']
         character = test_case['char']
@@ -168,67 +173,132 @@ class NarrativeConsistencyTester:
                 self.rag_cache[book_name] = {'rag': rag, 'temp_dir': temp_dir}
 
             # ------------------------------------------------------------
-            # Extract claims
+            # Generate questions DIRECTLY from backstory
             # ------------------------------------------------------------
-            print("Extracting claims...", flush=True)
-            claims = extract_claims(backstory, character)
-            if not claims:
-                raise ValueError("No claims extracted")
+            print("Generating questions directly from backstory...", flush=True)
 
-            # ------------------------------------------------------------
-            # Generate questions
-            # ------------------------------------------------------------
-            questions = []
-            for claim in claims:
-                questions.extend(generate_questions_from_event(claim, character))
+            questions = generate_questions_from_backstory(
+                backstory=backstory,
+                main_character=character
+            )
+
             if not questions:
-                raise ValueError("No questions generated")
+                raise ValueError("No questions generated from backstory")
 
             # ------------------------------------------------------------
-            # Retrieve + Evaluate (INLINE)
+            # Retrieve + Evaluate inline
             # ------------------------------------------------------------
             evaluations = []
             rag_results = {}
 
             for i, q in enumerate(questions, 1):
                 print(f"  [{i}/{len(questions)}] {q[:60]}...", flush=True)
+                
+                if output_file:
+                    output_file.write(f"\n  Question [{i}/{len(questions)}]:\n")
+                    output_file.write(f"  {q}\n")
 
-                docs = rag.retrieve_data(q, k=k)
-                chunks = [
-                    d.page_content if hasattr(d, "page_content") else str(d)
-                    for d in docs
-                ]
-                rag_results[q] = chunks
+                try:
+                    docs = rag.retrieve_data(q, k=k)
+                    chunks = [
+                        d.page_content if hasattr(d, "page_content") else str(d)
+                        for d in docs
+                    ]
 
-                eval_result = evaluate_consistency(q, chunks, backstory)
-                evaluations.append(eval_result)
+                    rag_results[q] = chunks
+                    
+                    if output_file:
+                        output_file.write(f"\n  RAG Retrieved {len(chunks)} chunks (showing top 1):\n")
+                        output_file.write(f"  {'-'*70}\n")
+                        if chunks:
+                            output_file.write(f"\n  TOP CHUNK:\n")
+                            output_file.write(f"  {'-'*70}\n")
+                            output_file.write(f"{chunks[0]}\n")
+                            output_file.write(f"  {'-'*70}\n")
 
-                print(
-                    f"    → {eval_result.get('verdict', 'UNCERTAIN')}",
-                    flush=True
-                )
+                    eval_result = evaluate_consistency(q, chunks, backstory, character=character)
+                    evaluations.append(eval_result)
+                    
+                    if output_file:
+                        output_file.write(f"\n  Evaluation Result:\n")
+                        output_file.write(f"    Verdict: {eval_result.get('verdict', 'uncertain')}\n")
+                        output_file.write(f"    Answer: {eval_result.get('answer', 'N/A')}\n")
+                        output_file.write(f"    Confidence: {eval_result.get('confidence', 0.0)}\n")
+                        output_file.write(f"    Reasoning: {eval_result.get('reasoning', 'N/A')}\n")
+
+                    if eval_result.get("verdict") == "contradict":
+                        print("    ⚠️ contradict detected", flush=True)
+                        print(f"       Reason: {eval_result.get('reasoning', 'N/A')}", flush=True)
+
+                    print(f"    → {eval_result.get('verdict', 'uncertain')}", flush=True)
+                except Exception as q_error:
+                    print(f"    ✗ Error evaluating question: {str(q_error)[:100]}", flush=True)
+                    import traceback
+                    traceback.print_exc()
+                    
+                    if output_file:
+                        output_file.write(f"\n  ERROR during evaluation:\n")
+                        output_file.write(f"    {str(q_error)}\n")
+                    
+                    evaluations.append({
+                        'verdict': 'uncertain',
+                        'answer': 'ERROR',
+                        'reasoning': str(q_error)
+                    })
 
             # ------------------------------------------------------------
-            # Decision rule
+            # Decision rule: If ANY evaluation is 'contradict', entire row is 'contradict'
             # ------------------------------------------------------------
-            decision = apply_decision_rule(evaluations)
-            verdict = decision['verdict']
-
-            predicted_label = '0' if verdict == 'INCONSISTENT' else '1'
+            has_any_contradict = any(e.get('verdict') == 'contradict' for e in evaluations)
+            verdict = 'contradict' if has_any_contradict else 'consistent'
+            
+            predicted_label = '0' if verdict == 'contradict' else '1'
             label_match = (predicted_label == expected_label)
 
+
+            contradict_reasons = [
+            {
+                "question": q,
+                "reasoning": e.get("reasoning", ""),
+                "answer": e.get("answer", "")
+            }
+            for q, e in zip(questions, evaluations)
+            if e.get("verdict") == "contradict"
+        ]
+
+
+
             # ------------------------------------------------------------
-            # PRINT FINAL ROW RESULT
+            # Print final result
             # ------------------------------------------------------------
-            print(f"\n  FINAL VERDICT : {verdict}", flush=True)
-            print(f"  EXPECTED      : {expected_label}", flush=True)
-            print(f"  PREDICTED     : {predicted_label}", flush=True)
-            print(f"  MATCH         : {'✓' if label_match else '✗'}", flush=True)
-            print("-" * 80, flush=True)
+            print("\n================ ROW RESULT ================", flush=True)
+            print(f"Book        : {book_name}", flush=True)
+            print(f"Character   : {character}", flush=True)
+            print(f"Verdict     : {verdict}", flush=True)
+            print(f"Expected    : {expected_label}", flush=True)
+            print(f"Predicted   : {predicted_label}", flush=True)
+            print(f"Match       : {'✓' if label_match else '✗'}", flush=True)
+            print("===========================================\n", flush=True)
+            
+            if output_file:
+                output_file.write("\n" + "="*60 + "\n")
+                output_file.write(f"FINAL ROW RESULT\n")
+                output_file.write("="*60 + "\n")
+                output_file.write(f"Book: {book_name}\n")
+                output_file.write(f"Character: {character}\n")
+                output_file.write(f"Verdict: {verdict}\n")
+                output_file.write(f"Expected Label: {expected_label}\n")
+                output_file.write(f"Predicted Label: {predicted_label}\n")
+                output_file.write(f"Match: {'YES' if label_match else 'NO'}\n")
+                output_file.write("="*60 + "\n\n")
+                output_file.flush()
+            print(f"Predicted   : {predicted_label}", flush=True)
+            print(f"Match       : {'✓' if label_match else '✗'}", flush=True)
+            print("===========================================\n", flush=True)
+
 
             return {
                 'test_case': test_case,
-                'claims': claims,
                 'questions': questions,
                 'rag_results': rag_results,
                 'evaluations': evaluations,
@@ -236,6 +306,7 @@ class NarrativeConsistencyTester:
                 'predicted_label': predicted_label,
                 'expected_label': expected_label,
                 'label_match': label_match,
+                "contradict_reasons": contradict_reasons,
                 'success': True
             }
 
@@ -251,6 +322,7 @@ class NarrativeConsistencyTester:
         finally:
             if temp_dir and not use_cached:
                 shutil.rmtree(temp_dir, ignore_errors=True)
+
 
 
     
@@ -288,7 +360,7 @@ class NarrativeConsistencyTester:
             print(f"Backstory : {test_case['content'][:100]}...", flush=True)
             print(f"{'=' * 80}", flush=True)
 
-            result = self.process_test_case(test_case, k=k)
+            result = self.process_test_case(test_case, k=k, output_file=output_f)
             results.append(result)
 
             if not result.get("success", False):
@@ -330,7 +402,7 @@ class NarrativeConsistencyTester:
         print(f"Total Test Cases: {summary['total_tests']}", flush=True)
         print(f"Successful Tests: {summary['successful_tests']}", flush=True)
         print(f"Consistent Evaluations: {summary.get('total_consistent', 0)}", flush=True)
-        print(f"Inconsistent Evaluations: {summary.get('total_inconsistent', 0)}", flush=True)
+        print(f"Contradict Evaluations: {summary.get('total_contradict', 0)}", flush=True)
         print(f"Uncertain Evaluations: {summary.get('total_uncertain', 0)}", flush=True)
         print(f"\n{'='*80}", flush=True)
         print(f"ACCURACY: {summary['accuracy']:.2f}%", flush=True)
@@ -350,7 +422,7 @@ class NarrativeConsistencyTester:
             
             test_case = result['test_case']
             expected_label = result.get('expected_label', '0')
-            expected_text = "INCONSISTENT" if expected_label == '0' else "CONSISTENT"
+            expected_text = "contradict" if expected_label == '0' else "consistent"
             
             print(f"\nTest {i}: {test_case['book_name']} - {test_case['char']}", flush=True)
             print(f"  Expected: {expected_text} (label: {expected_label})", flush=True)
@@ -359,8 +431,8 @@ class NarrativeConsistencyTester:
                 dr = result['decision_rule']
                 verdict = dr['verdict']
                 confidence = dr['confidence']
-                is_correct = (expected_label == '0' and verdict == 'INCONSISTENT') or \
-                            (expected_label == '1' and verdict in ['CONSISTENT', 'LIKELY_CONSISTENT'])
+                is_correct = (expected_label == '0' and verdict == 'contradict') or \
+                            (expected_label == '1' and verdict == 'consistent')
                 status = "✓ CORRECT" if is_correct else "✗ INCORRECT"
                 
                 print(f"  Predicted: {verdict} (confidence: {confidence:.2f}) {status}", flush=True)
@@ -368,14 +440,14 @@ class NarrativeConsistencyTester:
                 
                 signals = dr.get('signals', {})
                 print(f"  Evaluations: {signals.get('consistent_count', 0)} consistent, "
-                      f"{signals.get('inconsistent_count', 0)} inconsistent, "
+                      f"{signals.get('contradict_count', 0)} contradict, "
                       f"{signals.get('uncertain_count', 0)} uncertain", flush=True)
             
             if 'evaluations' in result:
-                inconsistent_evals = [e for e in result['evaluations'] if e.get('verdict') == 'INCONSISTENT']
-                if inconsistent_evals:
-                    print(f"  ⚠️  INCONSISTENT EVALUATIONS: {len(inconsistent_evals)}", flush=True)
-                    for eval_result in inconsistent_evals[:3]:  # Show first 3
+                contradict_evals = [e for e in result['evaluations'] if e.get('verdict') == 'contradict']
+                if contradict_evals:
+                    print(f"  ⚠️  contradict evaluations: {len(contradict_evals)}", flush=True)
+                    for eval_result in contradict_evals[:3]:  # Show first 3
                         print(f"    - {eval_result.get('answer', 'N/A')[:60]}...", flush=True)
 
 
@@ -429,6 +501,29 @@ def main():
         main()
     '''
 
+    from datetime import datetime
+
+    out_dir = Path(__file__).parent / "output"
+    out_dir.mkdir(exist_ok=True)
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    output_txt_path = out_dir / f"live_results_{timestamp}.txt"
+    output_json_path = out_dir / f"live_results_{timestamp}.json"
+
+    print(f"📄 Writing readable output to: {output_txt_path}", flush=True)
+    print(f"📊 Writing JSON output to: {output_json_path}", flush=True)
+
+    output_txt = open(output_txt_path, "w", encoding="utf-8")
+    
+    # Write header
+    output_txt.write("="*80 + "\n")
+    output_txt.write("NARRATIVE CONSISTENCY TEST RESULTS\n")
+    output_txt.write(f"Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+    output_txt.write("="*80 + "\n\n")
+    output_txt.flush()
+
+
+
     # --- NEW MAIN: process rows from train.csv and save per-row results ---
     from datetime import datetime
     train_csv = Path(__file__).parent.parent / "train.csv"
@@ -454,36 +549,58 @@ def main():
 
             print(f"\n{'='*80}", flush=True)
             print(f"Row {row_idx} (ID: {test_case['id']}) - Book: {test_case['book_name']} - Char: {test_case['char']}", flush=True)
+            
+            # Write to formatted output
+            output_txt.write(f"\n{'='*80}\n")
+            output_txt.write(f"ROW {row_idx}\n")
+            output_txt.write(f"{'='*80}\n")
+            output_txt.write(f"ID: {test_case['id']}\n")
+            output_txt.write(f"Book: {test_case['book_name']}\n")
+            output_txt.write(f"Character: {test_case['char']}\n")
+            output_txt.write(f"Expected Label: {test_case['label']}\n")
+            output_txt.write(f"Backstory:\n{test_case['content']}\n")
+            output_txt.write(f"\n{'-'*80}\n")
+            output_txt.flush()
 
-            result = tester.process_test_case(test_case, k=10)
-
-            # Attempt to make claims serializable
-            if isinstance(result, dict) and result.get('success', False):
-                serial_claims = []
-                for c in result.get('claims', []):
-                    try:
-                        serial_claims.append({
-                            'subject': getattr(c, 'subject', str(c)),
-                            'relation': getattr(c, 'relation', ''),
-                            'object': getattr(c, 'object', ''),
-                            'time': getattr(c, 'time', '') if hasattr(c, 'time') else '',
-                            'location': getattr(c, 'location', '') if hasattr(c, 'location') else ''
-                        })
-                    except Exception:
-                        serial_claims.append(str(c))
-                result['claims_serialized'] = serial_claims
+            result = tester.process_test_case(test_case, k=10, output_file=output_txt)
 
             all_results.append({'row': test_case, 'result': result})
 
     # Save aggregated results
     out_dir = Path(__file__).parent / 'output'
     out_dir.mkdir(exist_ok=True)
-    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    out_file = out_dir / f'test_framework_train_results_{timestamp}.json'
-    with open(out_file, 'w', encoding='utf-8') as wf:
+    
+    with open(output_json_path, 'w', encoding='utf-8') as wf:
         json.dump(all_results, wf, indent=2, ensure_ascii=False, default=str)
+    
+    # Write summary to text file
+    output_txt.write(f"\n\n{'='*80}\n")
+    output_txt.write("SUMMARY\n")
+    output_txt.write(f"{'='*80}\n")
+    output_txt.write(f"Total rows processed: {len(all_results)}\n")
+    
+    successful = sum(1 for r in all_results if r['result'].get('success', False))
+    failed = len(all_results) - successful
+    output_txt.write(f"Successful: {successful}\n")
+    output_txt.write(f"Failed: {failed}\n")
+    
+    # Count predictions
+    correct = sum(1 for r in all_results if r['result'].get('success', False) and r['result'].get('label_match', False))
+    total_valid = sum(1 for r in all_results if r['result'].get('success', False))
+    accuracy = (correct / total_valid * 100) if total_valid > 0 else 0
+    
+    output_txt.write(f"Correct Predictions: {correct}/{total_valid}\n")
+    output_txt.write(f"Accuracy: {accuracy:.2f}%\n")
+    output_txt.write(f"{'='*80}\n")
+    output_txt.flush()
 
-    print(f"\nProcessing complete. Results saved to: {out_file}", flush=True)
+    print(f"\nProcessing complete.", flush=True)
+    print(f"Readable results saved to: {output_txt_path}", flush=True)
+    print(f"JSON results saved to: {output_json_path}", flush=True)
+
+    output_txt.close()
+    print(f"✅ All results saved successfully", flush=True)
+
 
 
 if __name__ == "__main__":

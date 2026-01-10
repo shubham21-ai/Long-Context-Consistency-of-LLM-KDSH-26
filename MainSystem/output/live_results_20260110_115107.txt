@@ -1,0 +1,594 @@
+================================================================================
+NARRATIVE CONSISTENCY TEST RESULTS
+Timestamp: 2026-01-10 11:51:07
+================================================================================
+
+
+================================================================================
+ROW 1
+================================================================================
+ID: 46
+Book: In Search of the Castaways
+Character: Thalcave
+Expected Label: consistent
+Backstory:
+Thalcave’s people faded as colonists advanced; his father, last of the tribal guides, knew the pampas geography and animal ways, while his mother died giving birth. Boyhood was spent roaming the plains with his father, learning to track, tame horses and steer by the stars.
+
+--------------------------------------------------------------------------------
+
+  Question [1/5]:
+  What is the status of Thalcave's people?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+He turned towards Thalcave, and, recalling a few words of Spanish,
+began a conversation with the Indian, frequently interrupted by the
+cracks of the rifle.
+
+It was not without difficulty that these two men succeeded in
+understanding each other. Glenarvan, fortunately, knew the habits of
+the red wolf. Without this knowledge he could not have interpreted the
+words and gestures of the Patagonian.
+
+Nevertheless, a quarter of an hour passed before he could give to
+Robert the meaning of Thalcave's answer. He had questioned the Indian
+concerning their situation.
+
+"And what did he answer?" inquired Robert.
+
+"He said that, cost what it may, we must hold out till daybreak. The
+aguara goes out only at night, and when morning comes he returns to
+his lair. He is the wolf of darkness, a cowardly beast that fears the
+daylight."
+
+"Well, let us defend ourselves till day."
+
+"Yes, my boy, and with our knives if we can no longer use our guns."
+  ----------------------------------------------------------------------
+
+  ERROR during evaluation:
+    Invalid json output: 
+For troubleshooting, visit: https://docs.langchain.com/oss/python/langchain/errors/OUTPUT_PARSING_FAILURE 
+
+  Question [2/5]:
+  What was the occupation of Thalcave's father?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+"You have seen him?"
+
+"No, but he is mentioned in the accounts of the Indians. He was a brave
+man."
+
+"You understand, my friends," said Paganel; "a courageous man!"
+
+"My father!" cried Robert Grant.
+
+Then, addressing Paganel:
+
+"How do you say 'It is my father,' in Spanish?" he asked.
+
+"_Es mio padre_," answered the geographer.
+
+Immediately Robert, taking Thalcave's hands, said in a sweet voice,--
+
+"_Es mio padre!_"
+
+"_Suo padre!_" replied the Patagonian, whose look brightened.
+
+He took the boy in his arms, lifted him from his horse, and gazed at
+him with the most curious sympathy. His intelligent countenance became
+suffused with a peaceful emotion.
+
+But Paganel had not finished his inquiries. Where was this prisoner?
+What was he doing? When had Thalcave heard of him? All these questions
+thronged his mind at once. He did not have to wait long for answers,
+but learnt that the European was a slave of one of the Indian tribes
+that scour the plains.
+  ----------------------------------------------------------------------
+
+  ERROR during evaluation:
+    Invalid json output: 
+For troubleshooting, visit: https://docs.langchain.com/oss/python/langchain/errors/OUTPUT_PARSING_FAILURE 
+
+  Question [3/5]:
+  How did Thalcave's mother die?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+Glenarvan took his hand, and, pointing to the yacht, said,--
+
+"Come!"
+
+The Indian shook his head.
+
+"Come, my friend!" continued Glenarvan.
+
+"No," replied Thalcave, gently. "Here is Thaouka, and there are the
+Pampas!" he added, indicating with a sweep of his hand the vast expanse
+of the plains.
+
+It was clear that the Indian would never leave the prairies, where the
+bones of his fathers whitened. Glenarvan knew the strong attachment
+of these children of the desert to their native country. He therefore
+shook Thalcave's hand, and did not insist; not even when the Indian,
+smiling in his peculiar way, refused the price of his services,
+saying,--
+
+"It was done out of friendship."
+  ----------------------------------------------------------------------
+
+  ERROR during evaluation:
+    Invalid json output: 
+For troubleshooting, visit: https://docs.langchain.com/oss/python/langchain/errors/OUTPUT_PARSING_FAILURE 
+
+  Question [4/5]:
+  What did Thalcave learn from his father?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+Thalcave now began to observe with an anxious air the state of things
+around him. He frequently stopped, and rose in his stirrups. His tall
+form enabled him to survey a wide range; but, perceiving nothing that
+could enlighten him, he resumed his undeviating course. A mile farther,
+he stopped again, and, turning from the beaten track, proceeded a short
+distance, first to the north, then to the south, and then resumed his
+place at the head of the party, without saying either what he hoped or
+what he feared.
+
+These manoeuvres, many times repeated, puzzled Paganel and annoyed
+Glenarvan. The geographer was accordingly requested to interrogate
+the Indian, which he did at once. Thalcave replied that he was
+astonished to see the plain so soaked with moisture. Never within his
+recollection, since he had performed the office of guide, had his feet
+trodden a soil so saturated. Even in the season of the great rains the
+Argentine plain was always easily passed.
+  ----------------------------------------------------------------------
+
+  ERROR during evaluation:
+    Invalid json output: 
+For troubleshooting, visit: https://docs.langchain.com/oss/python/langchain/errors/OUTPUT_PARSING_FAILURE 
+
+  Question [5/5]:
+  What did Thalcave learn to do with horses?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+"Bravo, Robert!" said Glenarvan. "Thalcave seems to congratulate you.
+He praises you, my boy!"
+
+"And why, my lord?"
+
+"Because of the way you ride."
+
+"Oh, I merely keep firm; that is all," replied Robert, who blushed with
+pleasure at hearing himself complimented.
+
+"That is the main point, Robert," said Glenarvan; "but you are too
+modest, and I am sure you cannot fail to become an accomplished
+equestrian."
+
+"Well," said Robert, "but what will papa say, who wishes to make a
+sailor of me?"
+
+"The one does not interfere with the other. If all horsemen do not make
+good sailors, all sailors may certainly make good horsemen. To ride on
+the yards, you must learn to keep yourself firm. As for knowing how to
+manage your horse, that comes more easily."
+
+"Poor father!" exclaimed Robert; "how he will thank you when you have
+found him!" And, so saying, he took his lordship's hand and pressed it
+to his lips.
+
+"You love him well, Robert?"
+  ----------------------------------------------------------------------
+
+  ERROR during evaluation:
+    Invalid json output: 
+For troubleshooting, visit: https://docs.langchain.com/oss/python/langchain/errors/OUTPUT_PARSING_FAILURE 
+
+============================================================
+FINAL ROW RESULT
+============================================================
+Book: In Search of the Castaways
+Character: Thalcave
+Verdict: consistent
+Expected Label: consistent
+Predicted Label: 1
+Match: NO
+============================================================
+
+
+================================================================================
+ROW 2
+================================================================================
+ID: 137
+Book: The Count of Monte Cristo
+Character: Faria
+Expected Label: contradict
+Backstory:
+Suspected again in 1815, he was re-arrested and shipped to the Château d’If, this time for life.
+
+--------------------------------------------------------------------------------
+
+  Question [1/5]:
+  In what year was Faria suspected again?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+It was the governor, who, hearing of Faria’s illness from the jailer,
+had come in person to see him.
+
+Faria sat up to receive him, avoiding all gestures in order that he
+might conceal from the governor the paralysis that had already half
+stricken him with death. His fear was lest the governor, touched with
+pity, might order him to be removed to better quarters, and thus
+separate him from his young companion. But fortunately this was not the
+case, and the governor left him, convinced that the poor madman, for
+whom in his heart he felt a kind of affection, was only troubled with a
+slight indisposition.
+  ----------------------------------------------------------------------
+
+  ERROR during evaluation:
+    Invalid json output: 
+For troubleshooting, visit: https://docs.langchain.com/oss/python/langchain/errors/OUTPUT_PARSING_FAILURE 
+
+  Question [2/5]:
+  What was the reason for Faria's re-arrest in 1815?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+“Well?” asked Danglars.
+
+“Well, sir,” replied Eugénie, “I have tried to the very last and now
+that the moment has come, I feel in spite of all my efforts that it is
+impossible.”
+
+“But,” said Danglars, whose weak mind was at first quite overwhelmed
+with the weight of this pitiless logic, marking evident premeditation
+and force of will, “what is your reason for this refusal, Eugénie? what
+reason do you assign?”
+  ----------------------------------------------------------------------
+
+  Evaluation Result:
+    Verdict: uncertain
+    Answer: NOT_MENTIONED
+    Confidence: 1.0
+    Reasoning: The provided story passages describe interactions involving Danglars, Eugénie, Villefort, and Morrel, as well as a marriage feast scene. There is no mention of the character Faria, his arrest in 1815, or the Château d’If.
+
+  Question [3/5]:
+  What location was Faria shipped to after his re-arrest in 1815?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+It was the governor, who, hearing of Faria’s illness from the jailer,
+had come in person to see him.
+
+Faria sat up to receive him, avoiding all gestures in order that he
+might conceal from the governor the paralysis that had already half
+stricken him with death. His fear was lest the governor, touched with
+pity, might order him to be removed to better quarters, and thus
+separate him from his young companion. But fortunately this was not the
+case, and the governor left him, convinced that the poor madman, for
+whom in his heart he felt a kind of affection, was only troubled with a
+slight indisposition.
+  ----------------------------------------------------------------------
+
+  ERROR during evaluation:
+    Invalid json output: 
+For troubleshooting, visit: https://docs.langchain.com/oss/python/langchain/errors/OUTPUT_PARSING_FAILURE 
+
+  Question [4/5]:
+  What was the duration of Faria's sentence after his re-arrest in 1815?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+50181m
+
+
+
+The president called for the indictment, revised as we know, by the
+clever and implacable pen of Villefort. During the reading of this,
+which was long, the public attention was continually drawn towards
+Andrea, who bore the inspection with Spartan unconcern. Villefort had
+never been so concise and eloquent. The crime was depicted in the most
+vivid colors; the former life of the prisoner, his transformation, a
+review of his life from the earliest period, were set forth with all
+the talent that a knowledge of human life could furnish to a mind like
+that of the procureur. Benedetto was thus forever condemned in public
+opinion before the sentence of the law could be pronounced.
+  ----------------------------------------------------------------------
+
+  ERROR during evaluation:
+    Invalid json output: Here is the JSON
+For troubleshooting, visit: https://docs.langchain.com/oss/python/langchain/errors/OUTPUT_PARSING_FAILURE 
+
+  Question [5/5]:
+  What was the name of the location where Faria was imprisoned after his re-arrest in 1815?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+It was the governor, who, hearing of Faria’s illness from the jailer,
+had come in person to see him.
+
+Faria sat up to receive him, avoiding all gestures in order that he
+might conceal from the governor the paralysis that had already half
+stricken him with death. His fear was lest the governor, touched with
+pity, might order him to be removed to better quarters, and thus
+separate him from his young companion. But fortunately this was not the
+case, and the governor left him, convinced that the poor madman, for
+whom in his heart he felt a kind of affection, was only troubled with a
+slight indisposition.
+  ----------------------------------------------------------------------
+
+  ERROR during evaluation:
+    Invalid json output: 
+For troubleshooting, visit: https://docs.langchain.com/oss/python/langchain/errors/OUTPUT_PARSING_FAILURE 
+
+============================================================
+FINAL ROW RESULT
+============================================================
+Book: The Count of Monte Cristo
+Character: Faria
+Verdict: consistent
+Expected Label: contradict
+Predicted Label: 1
+Match: NO
+============================================================
+
+
+================================================================================
+ROW 3
+================================================================================
+ID: 74
+Book: In Search of the Castaways
+Character: Kai-Koumou
+Expected Label: consistent
+Backstory:
+Before each fight he studied the crack-patterns of his mother’s shark-tooth necklace by moonlight to divine the outcome.
+
+--------------------------------------------------------------------------------
+
+  Question [1/5]:
+  Does Kai-Koumou study the crack-patterns of his mother's shark-tooth necklace before each fight?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+[Sidenote: ACCESSIONS, AND PROGRESS.]
+
+The sun was just sinking below the horizon as the canoe ran upon a bank
+of pumice-stones, which the Waikato carries with it from its source
+in the volcanic mountains. Several trees grew here, as if designed to
+shelter an encampment. Kai-Koumou landed his prisoners.
+
+The men had their hands tied, the ladies were free. All were placed
+in the centre of the encampment, around which large fires formed an
+impassable barrier.
+
+Before Kai-Koumou had informed his captives of his intention to
+exchange them, Glenarvan and Captain Mangles had discussed various
+methods of recovering their liberty. What they could not venture in the
+boat they hoped to attempt on land, at the hour for encamping, under
+cover of the night.
+  ----------------------------------------------------------------------
+
+  ERROR during evaluation:
+    Invalid json output: 
+For troubleshooting, visit: https://docs.langchain.com/oss/python/langchain/errors/OUTPUT_PARSING_FAILURE 
+
+  Question [2/5]:
+  Does Kai-Koumou study the crack-patterns of his mother's shark-tooth necklace by moonlight?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+Around him were assembled the principal warriors of his tribe, among
+whom was seen the chief whose canoe had first joined Kai-Koumou on the
+river. He was a man of about forty, robust, and of fierce and cruel
+aspect. His name was Kara-TÃ©tÃ©, which means in the native language
+"The Irascible." Kai-Koumou treated him with some respect, and from
+the delicacy of his tattooing it was evident that he occupied a high
+rank in his tribe. An observer, however, would have detected a rivalry
+between the two chiefs. The major, indeed, perceived that Kara-TÃ©tÃ©'s
+influence surpassed that of Kai-Koumou. They both ruled the powerful
+tribes of the Waikato with equal rank; and, during this interview,
+although Kai-Koumou smiled, his eyes betrayed a deep hostility.
+
+He now questioned Glenarvan.
+
+"You are English?" said he.
+
+"Yes," replied Glenarvan, without hesitation, for this nationality
+would probably facilitate an exchange.
+
+[Sidenote: THE RATE OF BARTER.]
+
+"And your companions?" asked Kai-Koumou.
+  ----------------------------------------------------------------------
+
+  ERROR during evaluation:
+    Invalid json output: 
+For troubleshooting, visit: https://docs.langchain.com/oss/python/langchain/errors/OUTPUT_PARSING_FAILURE 
+
+  Question [3/5]:
+  Does Kai-Koumou use the crack-patterns of his mother's shark-tooth necklace to divine the outcome of each fight?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+Each cast a longing glance towards the surrounding mountains, the deep
+valleys, still veiled in mist, and the surface of Lake Taupo, gently
+rippling beneath the morning wind. Then all, eager to know Paganel's
+new project, gathered around him with questioning looks; while the
+geographer at once satisfied the restless curiosity of his companions.
+
+"My friends," said he, "my project has this advantage, that if it does
+not produce the result that I expect, or even fails, our situation will
+not be impaired. But it ought to and will succeed."
+
+"And this project?" asked the major.
+
+"This is it," replied Paganel. "The superstition of the natives has
+made this mountain a place of refuge, and this superstition must help
+us to escape. If I succeed in convincing Kai-Koumou that we have become
+the victims of our sacrilege, that the wrath of Heaven has fallen upon
+us, in short, that we have met a terrible death, do you think that he
+will abandon the mountain and return to his village?"
+  ----------------------------------------------------------------------
+
+  ERROR during evaluation:
+    Invalid json output: 
+For troubleshooting, visit: https://docs.langchain.com/oss/python/langchain/errors/OUTPUT_PARSING_FAILURE 
+
+  Question [4/5]:
+  Is the object Kai-Koumou studies his mother's shark-tooth necklace?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+Around him were assembled the principal warriors of his tribe, among
+whom was seen the chief whose canoe had first joined Kai-Koumou on the
+river. He was a man of about forty, robust, and of fierce and cruel
+aspect. His name was Kara-TÃ©tÃ©, which means in the native language
+"The Irascible." Kai-Koumou treated him with some respect, and from
+the delicacy of his tattooing it was evident that he occupied a high
+rank in his tribe. An observer, however, would have detected a rivalry
+between the two chiefs. The major, indeed, perceived that Kara-TÃ©tÃ©'s
+influence surpassed that of Kai-Koumou. They both ruled the powerful
+tribes of the Waikato with equal rank; and, during this interview,
+although Kai-Koumou smiled, his eyes betrayed a deep hostility.
+
+He now questioned Glenarvan.
+
+"You are English?" said he.
+
+"Yes," replied Glenarvan, without hesitation, for this nationality
+would probably facilitate an exchange.
+
+[Sidenote: THE RATE OF BARTER.]
+
+"And your companions?" asked Kai-Koumou.
+  ----------------------------------------------------------------------
+
+  ERROR during evaluation:
+    Invalid json output: 
+For troubleshooting, visit: https://docs.langchain.com/oss/python/langchain/errors/OUTPUT_PARSING_FAILURE 
+
+  Question [5/5]:
+  Does Kai-Koumou study the crack-patterns of his mother's shark-tooth necklace to predict the outcome of each fight?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+Each cast a longing glance towards the surrounding mountains, the deep
+valleys, still veiled in mist, and the surface of Lake Taupo, gently
+rippling beneath the morning wind. Then all, eager to know Paganel's
+new project, gathered around him with questioning looks; while the
+geographer at once satisfied the restless curiosity of his companions.
+
+"My friends," said he, "my project has this advantage, that if it does
+not produce the result that I expect, or even fails, our situation will
+not be impaired. But it ought to and will succeed."
+
+"And this project?" asked the major.
+
+"This is it," replied Paganel. "The superstition of the natives has
+made this mountain a place of refuge, and this superstition must help
+us to escape. If I succeed in convincing Kai-Koumou that we have become
+the victims of our sacrilege, that the wrath of Heaven has fallen upon
+us, in short, that we have met a terrible death, do you think that he
+will abandon the mountain and return to his village?"
+  ----------------------------------------------------------------------
+
+  ERROR during evaluation:
+    Invalid json output: 
+For troubleshooting, visit: https://docs.langchain.com/oss/python/langchain/errors/OUTPUT_PARSING_FAILURE 
+
+============================================================
+FINAL ROW RESULT
+============================================================
+Book: In Search of the Castaways
+Character: Kai-Koumou
+Verdict: consistent
+Expected Label: consistent
+Predicted Label: 1
+Match: NO
+============================================================
+
+
+================================================================================
+ROW 4
+================================================================================
+ID: 109
+Book: The Count of Monte Cristo
+Character: Noirtier
+Expected Label: contradict
+Backstory:
+Villefort’s drift toward the royalists disappointed him; father and son argued politics at every family gathering.
+
+--------------------------------------------------------------------------------
+
+  Question [1/5]:
+  Did Villefort's father and son argue about politics at family gatherings?
+
+  RAG Retrieved 10 chunks (showing top 1):
+  ----------------------------------------------------------------------
+
+  TOP CHUNK:
+  ----------------------------------------------------------------------
+No sooner had Villefort left the salon, than he assumed the grave air
+of a man who holds the balance of life and death in his hands. Now, in
+spite of the nobility of his countenance, the command of which, like a
+finished actor, he had carefully studied before the glass, it was by no
+means easy for him to assume an air of judicial severity. Except the
+recollection of the line of politics his father had adopted, and which
+might interfere, unless he acted with the greatest prudence, with his
+own career, Gérard de Villefort was as happy as a man could be. Already
+rich, he held a high official situation, though only twenty-seven. He
+was about to marry a young and charming woman, whom he loved, not
+passionately, but reasonably, as became a deputy attorney of the king;
+and besides her personal attractions, which were very great,
+Mademoiselle de Saint-Méran’s family possessed considerable political
+influence, which they would, of course, exert in his favor. The dowry
+  ----------------------------------------------------------------------
