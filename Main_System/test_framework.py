@@ -11,10 +11,9 @@ This framework:
 import csv
 import json
 import sys
-import tempfile
 import os
-import shutil
 import time
+import requests
 from pathlib import Path
 from typing import Dict, List, Tuple
 
@@ -27,29 +26,34 @@ try:
 except:
     pass
 
-# Add lohiya_code to path
-sys.path.insert(0, str(Path(__file__).parent))
-
 from backstory.claim_extractor import extract_claims
 from questions.question_generator import generate_questions_from_event
-from rag import RAG
 from evaluator import evaluate_consistency, apply_decision_rule
+
+# Import Pathway VectorStoreClient
+pathway_server_path = Path(__file__).parent / "Pathway_code"
+sys.path.insert(0, str(pathway_server_path))
+try:
+    from server import VectorStoreClient
+except ImportError:
+    # Fallback: VectorStoreClient not available, will use direct HTTP requests
+    VectorStoreClient = None
+    print("⚠️  VectorStoreClient not available, will use direct HTTP requests", flush=True)
 
 
 class NarrativeConsistencyTester:
     """Test framework for narrative consistency checking."""
     
-    def __init__(self, books_dir: str = None, test_csv: str = None, 
-                 model_llm: str = "gemini-2.0-flash", 
-                 model_embedding: str = "models/embedding-001"):
+    def __init__(self, books_dir: str = None, test_csv: str = None,
+                 pathway_host: str = "127.0.0.1", pathway_port: int = 8745):
         """
         Initialize the test framework.
         
         Args:
-            books_dir: Directory containing novel text files (default: ../Books)
+            books_dir: Directory containing novel text files (default: ../Books) - not used, kept for compatibility
             test_csv: Path to test CSV file with backstories (default: ../test.csv)
-            model_llm: Gemini LLM model name
-            model_embedding: Gemini embedding model name
+            pathway_host: Pathway server host (default: 127.0.0.1)
+            pathway_port: Pathway server port (default: 8745)
         """
         # Set default paths relative to lohiya_code directory
         if books_dir is None:
@@ -59,41 +63,20 @@ class NarrativeConsistencyTester:
         
         self.books_dir = Path(books_dir)
         self.test_csv = Path(test_csv)
-        self.books_cache = {}  # Cache loaded books
-        self.model_llm = model_llm
-        self.model_embedding = model_embedding
+        self.pathway_host = pathway_host
+        self.pathway_port = pathway_port
+        self.pathway_url = f"http://{pathway_host}:{pathway_port}"
         
-    def load_book(self, book_name: str) -> str:
-        """
-        Load a book from the Books directory.
-        
-        Args:
-            book_name: Name of the book (filename without .txt)
-            
-        Returns:
-            Book text content
-        """
-        if book_name in self.books_cache:
-            return self.books_cache[book_name]
-        
-        # Try to find the book file (case-insensitive)
-        book_files = list(self.books_dir.glob("*.txt"))
-        book_file = None
-        
-        for f in book_files:
-            if book_name.lower() in f.stem.lower() or f.stem.lower() in book_name.lower():
-                book_file = f
-                break
-        
-        if not book_file:
-            raise FileNotFoundError(f"Book '{book_name}' not found in {self.books_dir}")
-        
-        print(f"Loading book: {book_file.name}", flush=True)
-        with open(book_file, 'r', encoding='utf-8', errors='ignore') as f:
-            content = f.read()
-        
-        self.books_cache[book_name] = content
-        return content
+        # Initialize Pathway client
+        if VectorStoreClient:
+            try:
+                self.pathway_client = VectorStoreClient(host=pathway_host, port=pathway_port)
+                print(f"✓ Connected to Pathway server at {self.pathway_url}", flush=True)
+            except Exception as e:
+                print(f"⚠️  Warning: Could not initialize Pathway client: {e}", flush=True)
+                self.pathway_client = None
+        else:
+            self.pathway_client = None
     
     def load_test_data(self) -> List[Dict]:
         """
@@ -115,9 +98,92 @@ class NarrativeConsistencyTester:
                 })
         return test_cases
     
+    def query_pathway_server(self, question: str, k: int = 15, character: str = "") -> List[str]:
+        """
+        Query Pathway RAG server and retrieve relevant chunks.
+        
+        Args:
+            question: Query question
+            k: Number of chunks to retrieve
+            character: Character name (for filtering, not used in Pathway)
+            
+        Returns:
+            List of retrieved text chunks
+        """
+        max_retries = 5
+        retry_delay = 2
+        
+        for attempt in range(max_retries):
+            try:
+                # Try using VectorStoreClient first
+                if self.pathway_client:
+                    results = self.pathway_client.query(question, k=k)
+                    # Extract text from results (results are dicts with 'text' key)
+                    chunks = []
+                    for result in results:
+                        if isinstance(result, dict):
+                            chunks.append(result.get('text', str(result)))
+                        else:
+                            chunks.append(str(result))
+                    return chunks[:k]
+                
+                # Fallback to direct HTTP request
+                url = f"{self.pathway_url}/v1/retrieve"
+                response = requests.post(
+                    url,
+                    json={"query": question, "k": k},
+                    headers={"Content-Type": "application/json"},
+                    timeout=30
+                )
+                response.raise_for_status()
+                results = response.json()
+                
+                # Extract text from results
+                chunks = []
+                for result in results:
+                    if isinstance(result, dict):
+                        chunks.append(result.get('text', ''))
+                    else:
+                        chunks.append(str(result))
+                return chunks[:k]
+                
+            except (requests.exceptions.ConnectionError, requests.exceptions.RequestException) as e:
+                if attempt < max_retries - 1:
+                    print(f"    ⚠️  Connection attempt {attempt + 1} failed, retrying in {retry_delay}s...", flush=True)
+                    time.sleep(retry_delay)
+                else:
+                    print(f"    ✗ ERROR: Failed to connect to Pathway server after {max_retries} attempts", flush=True)
+                    raise ConnectionError(f"Could not connect to Pathway server at {self.pathway_url}: {e}")
+            except Exception as e:
+                print(f"    ✗ ERROR querying Pathway server: {e}", flush=True)
+                raise
+        
+        return []
+    
+    def check_server_status(self) -> bool:
+        """Check if Pathway server is running."""
+        try:
+            url = f"{self.pathway_url}/v1/statistics"
+            response = requests.post(
+                url,
+                json={},
+                headers={"Content-Type": "application/json"},
+                timeout=5
+            )
+            response.raise_for_status()
+            stats = response.json()
+            file_count = stats.get('file_count', 0)
+            print(f"✓ Pathway server is running ({file_count} files indexed)", flush=True)
+            return True
+        except Exception as e:
+            print(f"✗ Pathway server is not responding: {e}", flush=True)
+            print(f"  Make sure the server is running:", flush=True)
+            print(f"  cd Main_System/Pathway_code && python3 run-server-gdrive.py", flush=True)
+            return False
+    
     def process_test_case(self, test_case: Dict, k: int = 15) -> Dict:
         """
-        Process a single test case: extract claims, generate questions, query story using RAG.
+        Process a single test case: extract claims, generate questions, query story using Pathway RAG.
         
         Args:
             test_case: Dictionary with test case data
@@ -130,39 +196,10 @@ class NarrativeConsistencyTester:
         character = test_case['char']
         backstory = test_case['content']
         
-        # Create temporary file for story text (RAG class loads from directory)
-        temp_dir = tempfile.mkdtemp()
-        temp_file = os.path.join(temp_dir, "story.txt")
-        
         try:
-            # Load the book
-            story_text = self.load_book(book_name)
-            
-            # Write story to temporary file
-            with open(temp_file, 'w', encoding='utf-8') as f:
-                f.write(story_text)
-            
-            # Initialize RAG system
-            rag = RAG(
-                model_llm=self.model_llm,
-                model_embedding=self.model_embedding,
-                data_dir=temp_dir
-            )
-            
-            # Load models
-            rag.load_model()
-            
-            # Load data from directory
-            rag.load_data()
-            
-            # Split data into chunks
-            rag.split_data()
-            
-            # Create embeddings
-            rag.embed_data()
-            
-            # Create search indices (FAISS + BM25)
-            rag.create_index()
+            # Check server status
+            if not self.check_server_status():
+                raise ConnectionError("Pathway server is not running. Please start it first.")
             
             # Extract claims from backstory
             print("Extracting claims from backstory...", flush=True)
@@ -176,42 +213,34 @@ class NarrativeConsistencyTester:
                 event_questions = generate_questions_from_event(claim, character)
                 questions.extend(event_questions)
             
-            # Query RAG system for each question
-            print(f"\nQuerying RAG system (retrieving top {k} chunks per question)...", flush=True)
+            # Query Pathway RAG server for each question
+            print(f"\nQuerying Pathway RAG server (retrieving top {k} chunks per question)...", flush=True)
             rag_results = {}
             for i, question in enumerate(questions, 1):
                 print(f"  Querying {i}/{len(questions)}: {question[:60]}...", flush=True)
-                retrieved_docs = rag.retrieve_data(question, k=k, character=character)  
-                # Extract text content from LangChain Document objects
-                retrieved_chunks = []
-                for doc in retrieved_docs[:k]:
-                    if hasattr(doc, 'page_content'):
-                        retrieved_chunks.append(doc.page_content)
-                    elif isinstance(doc, str):
-                        retrieved_chunks.append(doc)
+                try:
+                    retrieved_chunks = self.query_pathway_server(question, k=k, character=character)
+                    rag_results[question] = retrieved_chunks
+                    print(f"    ✓ Retrieved {len(retrieved_chunks)} chunks", flush=True)
+                    if retrieved_chunks:
+                        print(f"    Preview: {retrieved_chunks[0][:80]}...", flush=True)
                     else:
-                        retrieved_chunks.append(str(doc))
-                rag_results[question] = retrieved_chunks
-                print(f"    ✓ Retrieved {len(retrieved_chunks)} chunks", flush=True)
-                if retrieved_chunks:
-                    print(f"    Preview: {retrieved_chunks[0][:80]}...", flush=True)
-                else:
-                    print(f"    ⚠️  WARNING: No chunks retrieved for this question!", flush=True)
+                        print(f"    ⚠️  WARNING: No chunks retrieved for this question!", flush=True)
+                except Exception as e:
+                    print(f"    ✗ ERROR: {str(e)}", flush=True)
+                    rag_results[question] = []
             
             print("RAG queries completed", flush=True)
             
-            # Get number of chunks safely
-            num_chunks = len(rag.texts) if hasattr(rag, 'texts') and rag.texts else 0
-            
             result_dict = {
-            'test_case': test_case,
-            'claims': claims,
-            'questions': questions,
-            'rag_results': rag_results,
-            'num_chunks': num_chunks,
-            'character': character,  # ADDED: Store character name
-            'success': True
-        }
+                'test_case': test_case,
+                'claims': claims,
+                'questions': questions,
+                'rag_results': rag_results,
+                'num_chunks': sum(len(chunks) for chunks in rag_results.values()),  # Total chunks retrieved
+                'character': character,
+                'success': True
+            }
             
             print(f"  Processed {len(claims)} claims, generated {len(questions)} questions, retrieved chunks for all queries", flush=True)
             
@@ -225,9 +254,6 @@ class NarrativeConsistencyTester:
                 'traceback': traceback.format_exc(),
                 'success': False
             }
-        finally:
-            # Clean up temporary directory
-            shutil.rmtree(temp_dir, ignore_errors=True)
     
     def run_tests(self, k: int = 8, max_tests: int = None) -> Dict:
         """
@@ -486,17 +512,21 @@ def main():
     os.environ['PYTHONUNBUFFERED'] = '1'
     
     parser = argparse.ArgumentParser(description='Test narrative consistency framework')
-    parser.add_argument('--books-dir', default=None, help='Directory containing books (default: ../Books)')
+    parser.add_argument('--books-dir', default=None, help='Directory containing books (default: ../Books) - not used with Pathway')
     parser.add_argument('--test-csv', default=None, help='Path to test CSV file (default: ../test.csv)')
     parser.add_argument('--k', type=int, default=10, help='Number of chunks to retrieve')
     parser.add_argument('--max-tests', type=int, default=None, help='Maximum number of tests to run')
+    parser.add_argument('--pathway-host', default='127.0.0.1', help='Pathway server host (default: 127.0.0.1)')
+    parser.add_argument('--pathway-port', type=int, default=8745, help='Pathway server port (default: 8745)')
     
     args = parser.parse_args()
     
     # Create tester
     tester = NarrativeConsistencyTester(
         books_dir=args.books_dir,
-        test_csv=args.test_csv
+        test_csv=args.test_csv,
+        pathway_host=args.pathway_host,
+        pathway_port=args.pathway_port
     )
     
     # Run tests

@@ -9,4 +9,6 @@ python-dotenv
 rank-bm25
 numpy
 groq
+pathway
+pandas
 

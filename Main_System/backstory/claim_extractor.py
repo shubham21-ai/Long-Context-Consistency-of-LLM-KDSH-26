@@ -48,6 +48,30 @@ def extract_claims(text: str, main_character: str, delay: float = 0.0):
     """
     # Delay removed for speed
     
+    # Validate input
+    if not text or not text.strip():
+        print("  ⚠️  WARNING: Empty backstory text provided", flush=True)
+        return []
+    
+    if not main_character or not main_character.strip():
+        print("  ⚠️  WARNING: Empty character name provided", flush=True)
+        return []
+    
+    # Check API key before making call
+    try:
+        api_key = load_groq_api_key()
+        if not api_key:
+            print("  ✗ ERROR: GROQ_API_KEY not found in environment variables", flush=True)
+            print("  → Please set GROQ_API_KEY in Main System/.env file", flush=True)
+            return []
+    except RuntimeError as e:
+        print(f"  ✗ ERROR: {e}", flush=True)
+        print("  → Please create Main System/.env file with GROQ_API_KEY=your_key", flush=True)
+        return []
+    except Exception as e:
+        print(f"  ✗ ERROR loading API key: {e}", flush=True)
+        return []
+    
     user_prompt = f"""Extract all explicit events from the following character backstory text.
 
 CHARACTER BACKSTORY TEXT:
@@ -327,7 +351,9 @@ CRITICAL: You MUST output ONLY a valid JSON array. Do NOT include any explanator
         return events
         
     except Exception as e:
-        print(f"Error extracting claims: {e}")
+        print(f"  ✗ ERROR extracting claims: {e}", flush=True)
         import traceback
+        print(f"  → Full traceback:", flush=True)
         traceback.print_exc()
+        print(f"  → Returning empty list - check your Groq API key in .env file", flush=True)
         return []
