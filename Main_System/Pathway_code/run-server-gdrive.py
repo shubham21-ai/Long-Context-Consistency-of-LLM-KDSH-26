@@ -91,7 +91,7 @@ print(f"✓ Embedding model: {EMBEDDING_MODEL} (SOTA upgrade)")
 print(f"✓ Chunk size: 1000, overlap: 250 (improved context)")
 print("=" * 80)
 print("NOTE: This server only does RETRIEVAL (vector search).")
-print("Answer generation/LLM is handled separately in test_framework.py")
+print("Answer generation/LLM is handled separately in main.py")
 print("=" * 80)
 
 vector_server.run_server(host="127.0.0.1", port=8745, threaded=True, with_cache=True)

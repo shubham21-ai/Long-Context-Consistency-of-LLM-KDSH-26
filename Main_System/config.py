@@ -48,25 +48,6 @@ def load_huggingface_api_key() -> str:
     )
 
 
-def load_groq_api_key() -> str:
-    """
-    Load the Groq API key from environment variable.
-    
-    Returns:
-        The API key string.
-        
-    Raises:
-        RuntimeError: if no API key can be found.
-    """
-    api_key = os.getenv("GROQ_API_KEY")
-    if api_key:
-        return api_key.strip()
-    
-    raise RuntimeError(
-        "Missing Groq API key. Set GROQ_API_KEY in .env file or as environment variable."
-    )
-
-
 def load_gemini_api_key() -> str:
     """
     Load the Google Gemini API key from environment variable.

@@ -2,13 +2,14 @@ import json
 import time
 import os
 from models.schemas import Event
-from config import load_groq_api_key
+from config import load_gemini_api_key
+from google import genai
 
 # Suppress tokenizers warnings
 os.environ['TOKENIZERS_PARALLELISM'] = 'false'
 
-# Groq API configuration
-GROQ_MODEL = "llama-3.1-8b-instant"
+# Gemini API configuration
+GEMINI_MODEL = "gemini-2.5-flash"
 
 SYSTEM_PROMPT = """You are an expert information extraction system specialized in narrative analysis and character backstory processing.
 
@@ -36,7 +37,7 @@ Return a JSON array where each object represents one distinct event from the tex
 
 def extract_claims(text: str, main_character: str, delay: float = 0.0):
     """
-    Extract explicit events/claims from backstory text using Groq LLM (qwen/qwen3-32b).
+    Extract explicit events/claims from backstory text using Gemini LLM.
     
     Args:
         text: The backstory text to extract events from
@@ -59,14 +60,14 @@ def extract_claims(text: str, main_character: str, delay: float = 0.0):
     
     # Check API key before making call
     try:
-        api_key = load_groq_api_key()
+        api_key = load_gemini_api_key()
         if not api_key:
-            print("  ✗ ERROR: GROQ_API_KEY not found in environment variables", flush=True)
-            print("  → Please set GROQ_API_KEY in Main System/.env file", flush=True)
+            print("  ✗ ERROR: GEMINI_API_KEY not found in environment variables", flush=True)
+            print("  → Please set GEMINI_API_KEY in Main System/.env file", flush=True)
             return []
     except RuntimeError as e:
         print(f"  ✗ ERROR: {e}", flush=True)
-        print("  → Please create Main System/.env file with GROQ_API_KEY=your_key", flush=True)
+        print("  → Please create Main System/.env file with GEMINI_API_KEY=your_key", flush=True)
         return []
     except Exception as e:
         print(f"  ✗ ERROR loading API key: {e}", flush=True)
@@ -106,12 +107,10 @@ Return a JSON array in this exact format:
 CRITICAL: You MUST output ONLY a valid JSON array. Do NOT include any explanatory text, reasoning, or markdown formatting. Start directly with [ and end with ]. No code blocks, no explanations, just pure JSON."""
 
     try:
-        # Import Groq client
-        from groq import Groq
-        
-        # Load API key from .env
-        api_key = load_groq_api_key()
-        client = Groq(api_key=api_key)
+        # Configure Gemini API
+        api_key = load_gemini_api_key()
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel(GEMINI_MODEL)
         
         # Retry logic for rate limits
         max_retries = 3

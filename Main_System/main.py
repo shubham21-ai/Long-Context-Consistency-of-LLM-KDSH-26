@@ -28,6 +28,8 @@ except:
 
 from questions.question_generator import generate_questions_from_backstory
 from evaluator import evaluate_consistency, apply_decision_rule
+from csv_loader import load_csv_file
+from csv_loader import load_csv_file
 
 # Try to import hybrid retriever (optional)
 try:
@@ -55,7 +57,7 @@ except ImportError:
 class NarrativeConsistencyTester:
     """Test framework for narrative consistency checking."""
     
-    def __init__(self, books_dir: str = None, test_csv: str = None,
+    def __init__(self, books_dir: str = None, test_csv: str = None, test_csv_gdrive_id: str = None,
                  pathway_host: str = "127.0.0.1", pathway_port: int = 8745,
                  use_hybrid_search: bool = False):
         """
@@ -64,6 +66,7 @@ class NarrativeConsistencyTester:
         Args:
             books_dir: Directory containing novel text files (default: ../Books) - not used, kept for compatibility
             test_csv: Path to test CSV file with backstories (default: ../test.csv)
+            test_csv_gdrive_id: Google Drive file ID for CSV file (alternative to test_csv)
             pathway_host: Pathway server host (default: 127.0.0.1)
             pathway_port: Pathway server port (default: 8745)
             use_hybrid_search: Enable hybrid search (BM25 + semantic) - default: False
@@ -71,11 +74,12 @@ class NarrativeConsistencyTester:
         # Set default paths relative to Main_System directory
         if books_dir is None:
             books_dir = Path(__file__).parent.parent / "Books"
-        if test_csv is None:
+        if test_csv is None and test_csv_gdrive_id is None:
             test_csv = Path(__file__).parent.parent / "test.csv"
         
         self.books_dir = Path(books_dir)
-        self.test_csv = Path(test_csv)
+        self.test_csv = Path(test_csv) if test_csv else None
+        self.test_csv_gdrive_id = test_csv_gdrive_id
         self.pathway_host = pathway_host
         self.pathway_port = pathway_port
         self.pathway_url = f"http://{pathway_host}:{pathway_port}"
@@ -114,32 +118,42 @@ class NarrativeConsistencyTester:
     
     def load_test_data(self) -> List[Dict]:
         """
-        Load test data from CSV file.
+        Load test data from CSV file (local or Google Drive).
         
         Returns:
             List of dictionaries with test cases
         """
         test_cases = []
-        with open(self.test_csv, 'r', encoding='utf-8') as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                # Keep original string label from CSV ("consistent" or "contradict")
-                raw_label = row.get('label', '').strip().lower()
-                # Normalize to standard format but keep as string
-                if raw_label in ['consistent', '1', 'true']:
-                    label = 'consistent'
-                elif raw_label in ['contradict', 'inconsistent', '0', 'false']:
-                    label = 'contradict'
-                else:
-                    label = 'contradict'  # Default to contradict if unclear
-                
-                test_cases.append({
-                    'id': row.get('id', ''),
-                    'book_name': row.get('book_name', ''),
-                    'char': row.get('char', ''),
-                    'content': row.get('content', ''),
-                    'label': label  # String label: "consistent" or "contradict"
-                })
+        
+        # Load CSV from Google Drive or local filesystem
+        try:
+            csv_rows = load_csv_file(
+                file_path=str(self.test_csv) if self.test_csv else None,
+                gdrive_file_id=self.test_csv_gdrive_id,
+                credentials_path=Path(__file__).parent / "service_account.json.json"
+            )
+        except Exception as e:
+            print(f"  ✗ ERROR loading CSV file: {e}", flush=True)
+            raise
+        
+        for row in csv_rows:
+            # Keep original string label from CSV ("consistent" or "contradict")
+            raw_label = row.get('label', '').strip().lower()
+            # Normalize to standard format but keep as string
+            if raw_label in ['consistent', '1', 'true']:
+                label = 'consistent'
+            elif raw_label in ['contradict', 'inconsistent', '0', 'false']:
+                label = 'contradict'
+            else:
+                label = 'contradict'  # Default to contradict if unclear
+            
+            test_cases.append({
+                'id': row.get('id', ''),
+                'book_name': row.get('book_name', ''),
+                'char': row.get('char', ''),
+                'content': row.get('content', ''),
+                'label': label  # String label: "consistent" or "contradict"
+            })
         return test_cases
     
     def query_pathway_server(self, question: str, k: int = 15, character: str = "") -> List[str]:
@@ -331,7 +345,8 @@ class NarrativeConsistencyTester:
         print("="*80)
         
         # Load test data
-        print(f"\nLoading test data from {self.test_csv}...", flush=True)
+        csv_source = f"Google Drive (ID: {self.test_csv_gdrive_id})" if self.test_csv_gdrive_id else str(self.test_csv)
+        print(f"\nLoading test data from {csv_source}...", flush=True)
         test_cases = self.load_test_data()
         if max_tests:
             test_cases = test_cases[:max_tests]
@@ -480,7 +495,7 @@ class NarrativeConsistencyTester:
                         total_consistent += 1
                     elif verdict == 'INCONSISTENT':
                         total_inconsistent += 1
-                    else:
+                else:
                         total_uncertain += 1
         
         accuracy = (correct_predictions / total_predictions * 100) if total_predictions > 0 else 0
@@ -577,7 +592,8 @@ def main():
     
     parser = argparse.ArgumentParser(description='Test narrative consistency framework')
     parser.add_argument('--books-dir', default=None, help='Directory containing books (default: ../Books) - not used with Pathway')
-    parser.add_argument('--test-csv', default=None, help='Path to test CSV file (default: ../test.csv)')
+    parser.add_argument('--test-csv', default=None, help='Path to local test CSV file (default: ../test.csv)')
+    parser.add_argument('--test-csv-gdrive-id', default=None, help='Google Drive file ID for CSV file (alternative to --test-csv)')
     parser.add_argument('--k', type=int, default=10, help='Number of chunks to retrieve')
     parser.add_argument('--max-tests', type=int, default=None, help='Maximum number of tests to run')
     parser.add_argument('--pathway-host', default='127.0.0.1', help='Pathway server host (default: 127.0.0.1)')
@@ -590,6 +606,7 @@ def main():
     tester = NarrativeConsistencyTester(
         books_dir=args.books_dir,
         test_csv=args.test_csv,
+        test_csv_gdrive_id=args.test_csv_gdrive_id,
         pathway_host=args.pathway_host,
         pathway_port=args.pathway_port,
         use_hybrid_search=args.hybrid_search
