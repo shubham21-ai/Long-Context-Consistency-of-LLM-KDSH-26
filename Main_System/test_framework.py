@@ -26,8 +26,7 @@ try:
 except:
     pass
 
-from backstory.claim_extractor import extract_claims
-from questions.question_generator import generate_questions_from_event
+from questions.question_generator import generate_questions_from_backstory
 from evaluator import evaluate_consistency, apply_decision_rule
 
 # Try to import hybrid retriever (optional)
@@ -279,19 +278,11 @@ class NarrativeConsistencyTester:
             if not self.check_server_status():
                 raise ConnectionError("Pathway server is not running. Please start it first.")
             
-            # Extract claims from backstory
-            claims = extract_claims(backstory, character)
+            # Generate questions directly from backstory using Gemini
+            questions = generate_questions_from_backstory(backstory, character)
             
-            # Generate questions (optimized: 1 question per claim)
-            # Track which question corresponds to which claim
-            questions = []
-            question_to_claim = {}  # Map question -> claim Event object
-            
-            for claim in claims:
-                event_questions = generate_questions_from_event(claim, character)
-                for question in event_questions:
-                    questions.append(question)
-                    question_to_claim[question] = claim  # Store mapping
+            if not questions:
+                raise ValueError(f"No questions generated from backstory for {character}")
             
             # Query Pathway RAG server for each question
             rag_results = {}
@@ -304,16 +295,14 @@ class NarrativeConsistencyTester:
             
             result_dict = {
                 'test_case': test_case,
-                'claims': claims,
                 'questions': questions,
-                'question_to_claim': question_to_claim,  # Store mapping for evaluation
                 'rag_results': rag_results,
                 'num_chunks': sum(len(chunks) for chunks in rag_results.values()),  # Total chunks retrieved
                 'character': character,
                 'success': True
             }
             
-            print(f"  Processed {len(claims)} claims, generated {len(questions)} questions, retrieved chunks for all queries", flush=True)
+            print(f"  Generated {len(questions)} questions from backstory, retrieved chunks for all queries", flush=True)
             
             return result_dict
             
@@ -405,48 +394,23 @@ class NarrativeConsistencyTester:
                     results.append(result)
                     continue
                 
-                # SINGLE EVALUATION: Compare retrieved answers with SPECIFIC claims only (not full backstory)
+                # SINGLE EVALUATION: Compare retrieved answers with backstory
                 print(f"\n  → Starting evaluation phase...", flush=True)
-                print(f"Evaluating {len(result['questions'])} questions against specific claims...", flush=True)
+                print(f"Evaluating {len(result['questions'])} questions against backstory...", flush=True)
                 evaluations = []
-                
-                # Helper function to convert Event to readable claim text
-                def event_to_claim_text(event):
-                    """Convert Event object to readable claim text string."""
-                    parts = []
-                    if event.subject:
-                        parts.append(event.subject)
-                    if event.relation:
-                        parts.append(event.relation)
-                    if event.object:
-                        parts.append(event.object)
-                    if event.time:
-                        parts.append(f"(time: {event.time})")
-                    if event.location:
-                        parts.append(f"(location: {event.location})")
-                    return " ".join(parts) if parts else ""
-                
-                question_to_claim = result.get('question_to_claim', {})
                 
                 for idx, question in enumerate(result['questions'], 1):
                     retrieved_chunks = result['rag_results'].get(question, [])
                     
-                    # Get the specific claim for this question (not the full backstory)
-                    claim_event = question_to_claim.get(question)
-                    if claim_event:
-                        # Convert Event to readable claim text
-                        specific_claim = event_to_claim_text(claim_event)
-                    else:
-                        # Fallback: if mapping missing, use minimal claim (should not happen)
-                        specific_claim = f"{test_case['char']} related event"
-                    
-                    # Single evaluation: Compare retrieved answer with SPECIFIC claim only
+                    # Evaluation: Compare retrieved answer with backstory
+                    # The question itself encodes what to check, so we use the full backstory for context
                     print(f"  Evaluating {idx}/{len(result['questions'])}: {question[:60]}...", flush=True)
                     try:
                         eval_result = evaluate_consistency(
                             question,
                             retrieved_chunks,
-                            specific_claim  # Only the specific claim, not full backstory
+                            test_case['content'],  # Full backstory for context (question specifies what to check)
+                            test_case['char']  # Character name
                         )
                         
                         evaluations.append(eval_result)

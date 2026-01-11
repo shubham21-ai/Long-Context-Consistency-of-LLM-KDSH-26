@@ -99,32 +99,21 @@ class HybridRetriever:
                 response.raise_for_status()
                 results = response.json()
                 
-                # Handle different response formats
-                response_data = results
                 if "results" in results:
-                    response_data = results["results"]
-                elif isinstance(results, list):
-                    response_data = results
-                
-                # Process results
-                for result in response_data:
-                    # Extract text - handle different formats
-                    text = None
-                    if isinstance(result, dict):
-                        text = result.get("text") or result.get("content") or result.get("page_content")
-                    elif isinstance(result, str):
-                        text = result
-                    
-                    if text and text not in all_texts:
-                        all_texts.add(text)
-                        all_results.append({
-                            "text": text,
-                            "metadata": result.get("metadata", {}) if isinstance(result, dict) else {},
-                            "score": result.get("score", 0.0) if isinstance(result, dict) else 0.0
-                        })
-                        
-                        if len(all_results) >= max_samples:
-                            break
+                    for result in results["results"]:
+                        if "text" in result:
+                            text = result["text"]
+                            # Use text as key to avoid duplicates
+                            if text not in all_texts:
+                                all_texts.add(text)
+                                all_results.append({
+                                    "text": text,
+                                    "metadata": result.get("metadata", {}),
+                                    "score": result.get("score", 0.0)
+                                })
+                                
+                                if len(all_results) >= max_samples:
+                                    break
                 
                 if len(all_results) >= max_samples:
                     break

@@ -9,58 +9,49 @@ This module handles:
 import json
 import time
 import re
+import os
 from typing import Dict, List
-from config import load_groq_api_key
+from config import load_gemini_api_key
+from google import genai
 
-# Groq API configuration
-GROQ_MODEL = "qwen/qwen3-32b"
+# Gemini API configuration
+GEMINI_MODEL = "gemini-2.5-flash"
 
 
-def call_groq_api(messages: List[Dict], temperature: float = 0.0, max_tokens: int = 512, 
-                  max_retries: int = 3, delay: float = 0.0, model: str = GROQ_MODEL) -> Dict:
+def call_gemini_api(prompt: str, temperature: float = 0.0, max_tokens: int = 512, 
+                    max_retries: int = 3, model: str = GEMINI_MODEL) -> Dict:
     """
-    Helper function to call Groq API with retry logic.
+    Helper function to call Gemini API with retry logic.
     
     Args:
-        messages: List of message dicts with 'role' and 'content'
-        temperature: Temperature for generation
+        prompt: The prompt text to send to Gemini
+        temperature: Temperature for generation (0.0-2.0)
         max_tokens: Maximum tokens to generate
         max_retries: Maximum number of retry attempts
-        delay: Delay in seconds before making the API call (deprecated, kept for compatibility)
         model: Model name to use
         
     Returns:
         Response data as dictionary with 'choices' key compatible with existing code
     """
-    # Delay removed for speed
+    # Load API key and set environment variable
+    api_key = load_gemini_api_key()
+    os.environ['GEMINI_API_KEY'] = api_key
     
-    # Import Groq client
-    from groq import Groq
-    
-    # Load API key from .env when needed
-    api_key = load_groq_api_key()
-    client = Groq(api_key=api_key)
-    retry_delay = 0
+    # Initialize Gemini client
+    client = genai.Client()
     
     for attempt in range(max_retries):
         try:
-            completion = client.chat.completions.create(
+            # Gemini API call
+            response = client.models.generate_content(
                 model=model,
-                messages=messages,
-                temperature=temperature,
-                max_completion_tokens=max_tokens,
-                stream=False
+                contents=prompt
             )
             
-            # Convert Groq response to OpenRouter-compatible format
-            if not completion.choices or len(completion.choices) == 0:
-                raise Exception(f"No choices in response")
+            # Extract content from response
+            content = response.text if hasattr(response, 'text') else str(response)
             
-            # Extract content and format as OpenRouter-compatible response
-            message = completion.choices[0].message
-            content = message.content if hasattr(message, 'content') else str(message)
-            
-            # Format as OpenRouter-compatible response
+            # Format as OpenRouter-compatible response for compatibility
             response_data = {
                 'choices': [{
                     'message': {
@@ -68,20 +59,22 @@ def call_groq_api(messages: List[Dict], temperature: float = 0.0, max_tokens: in
                         'role': 'assistant'
                     }
                 }],
-                'model': completion.model if hasattr(completion, 'model') else model,
+                'model': model,
                 'usage': {
-                    'prompt_tokens': completion.usage.prompt_tokens if hasattr(completion, 'usage') and hasattr(completion.usage, 'prompt_tokens') else 0,
-                    'completion_tokens': completion.usage.completion_tokens if hasattr(completion, 'usage') and hasattr(completion.usage, 'completion_tokens') else 0,
-                    'total_tokens': completion.usage.total_tokens if hasattr(completion, 'usage') and hasattr(completion.usage, 'total_tokens') else 0
+                    'prompt_tokens': 0,  # Gemini doesn't expose token counts easily
+                    'completion_tokens': 0,
+                    'total_tokens': 0
                 }
             }
             
             return response_data
         except Exception as e:
             error_str = str(e).lower()
-            if 'rate' in error_str or 'limit' in error_str or '429' in error_str:
+            if 'rate' in error_str or 'limit' in error_str or '429' in error_str or 'quota' in error_str:
                 if attempt < max_retries - 1:
-                    print(f"      ⚠️  Rate limit hit, retrying immediately... (attempt {attempt + 1}/{max_retries})", flush=True)
+                    print(f"      ⚠️  Rate limit hit, retrying... (attempt {attempt + 1}/{max_retries})", flush=True)
+                    retry_delay = 0.5 * (2 ** attempt)  # Exponential backoff
+                    time.sleep(retry_delay)
                     continue
             # If not a rate limit error or max retries reached, raise
             if attempt == max_retries - 1:
@@ -92,7 +85,7 @@ def call_groq_api(messages: List[Dict], temperature: float = 0.0, max_tokens: in
 
 
 def evaluate_consistency(question: str, retrieved_chunks: List[str], 
-                        backstory_facts: str, character: str = "") -> Dict:  # ADDED: character parameter
+                        backstory_facts: str, character: str = "") -> Dict:
     """
     Single evaluation: Compare retrieved answer from story chunks with backstory facts.
     
@@ -105,7 +98,7 @@ def evaluate_consistency(question: str, retrieved_chunks: List[str],
         question: Question about the backstory fact
         retrieved_chunks: Retrieved text chunks from the story
         backstory_facts: The relevant backstory facts/claim
-        character: Character name to focus on (ADDED)
+        character: Character name to focus on
         
     Returns:
         Dictionary with verdict, answer, and reasoning
@@ -119,67 +112,72 @@ def evaluate_consistency(question: str, retrieved_chunks: List[str],
             'reasoning': 'No chunks retrieved to answer the question'
         }
     
-    # CHANGE 1: Use more chunks (up to 8 instead of 5)
+    # Use more chunks (up to 8 instead of 5)
     combined_context = "\n\n".join(retrieved_chunks[:8])
     
     print(f"      → Starting evaluation for question...", flush=True)
     
-    # CHANGE 2: Improved evaluation prompt with character focus
+    # Improved evaluation prompt with character focus
     char_context = f" about the character {character}" if character else ""
     
     evaluation_prompt = f"""You are evaluating narrative consistency. Extract information from story passages{char_context}.
 
 CHARACTER: {character if character else "Not specified"}
 QUESTION: {question}
-BACKSTORY CLAIM: {backstory_facts}
+BACKSTORY CONTEXT (for reference): {backstory_facts}
 
 STORY PASSAGES:
 {combined_context[:6000]}
 
 INSTRUCTIONS:
 
-STEP 1: SEARCH FOR INFORMATION
-Look for ANY of these in the story passages:
-- Mentions of "{character}" (the character)
-- Events, actions, or situations related to the question
-- Indirect references or implications
-- Related characters or events even if described differently
+STEP 1: UNDERSTAND THE QUESTION
+Focus ONLY on what the QUESTION is asking. The question specifies exactly what aspect to verify.
 
-IMPORTANT: The story may use different words than the backstory. Examples:
-- Backstory: "engineered" → Story: "arranged", "orchestrated", "planned"
-- Backstory: "Villefort" → Story: "the prosecutor", "his son"
+STEP 2: SEARCH FOR INFORMATION (related to the QUESTION only)
+Look for information in the story passages that answers the QUESTION:
+- Mentions of "{character}" related to what the question asks
+- Events, actions, or situations that answer the question
+- DO NOT look for information NOT mentioned in the question
+- DO NOT check for facts from the backstory that are not in the question
+
+IMPORTANT: The story may use different words than the question. Examples:
+- Question: "learned to track" → Story: "taught tracking", "mastered tracking", "tracking skills"
+- Question: "{character}" → Story: "the character", descriptive phrases
 - Look for the MEANING, not exact words
 
-STEP 2: EXTRACT WHAT THE STORY SAYS
-Write what you found in the passages. Be specific. Quote relevant parts if needed.
-If you find NOTHING related to {character} or the question topic, write "NOT_MENTIONED"
+STEP 3: EXTRACT WHAT THE STORY SAYS (about the QUESTION)
+Write what you found in the passages that relates to the QUESTION. Be specific. Quote relevant parts if needed.
+If you find NOTHING related to the question, write "NOT_MENTIONED"
 
-STEP 3: COMPARE WITH BACKSTORY
-- Does the story SUPPORT the backstory claim? → CONSISTENT
-- Does the story CONTRADICT the backstory claim? → INCONSISTENT  
-- Is there NO relevant information in the passages? → UNCERTAIN
+STEP 4: EVALUATE CONSISTENCY (for the QUESTION only)
+- Does the story answer the question in a way that SUPPORTS the backstory? → CONSISTENT
+- Does the story answer the question in a way that CONTRADICTS the backstory? → INCONSISTENT  
+- Is there NO relevant information in the passages about the question? → UNCERTAIN
 
 VERDICT DEFINITIONS:
-✓ CONSISTENT: Story mentions events/facts that match or support the backstory
-  - Same character doing similar actions
-  - Compatible information (even if described differently)
-  - Supporting evidence for the claim
+✓ CONSISTENT: Story provides information that supports what the question asks about
+  - Story confirms or supports the fact being questioned
+  - Compatible information found (even if described differently)
+  - Supporting evidence for what the question asks
 
-✗ INCONSISTENT: Story actively contradicts the backstory
-  - Different facts (X did Y, but story says X did Z)
-  - Contradictory dates, events, or relationships
-  - Story explicitly denies or contradicts the claim
+✗ INCONSISTENT: Story provides information that contradicts what the question asks about
+  - Story explicitly contradicts the fact being questioned
+  - Contradictory information found
+  - Story denies or contradicts what the question asks
 
-? UNCERTAIN: Story has NO relevant information
-  - Character {character} not mentioned in these passages
-  - No events related to the question
+? UNCERTAIN: Story has NO relevant information about what the question asks
+  - No information found related to the question
+  - Character {character} not mentioned in relation to the question
   - Passages are about completely different topics
   
 CRITICAL RULES:
-1. Extract information actively - if you see {character} or related events, extract them
-2. Only use UNCERTAIN if passages have ZERO relevant information
-3. Different wording is OK - focus on whether facts align or contradict
-4. Be precise: "not mentioned" ≠ "contradicted"
+1. Focus ONLY on what the QUESTION asks - ignore other backstory facts not in the question
+2. Extract information actively - if you see {character} or related events, extract them
+3. Only use UNCERTAIN if passages have ZERO relevant information about the question
+4. Different wording is OK - focus on whether facts align or contradict
+5. Be precise: "not mentioned" ≠ "contradicted"
+6. The backstory context is for reference only - focus on answering the question
 
 Output ONLY this JSON (no markdown, no explanation, no other text):
 {{
@@ -191,14 +189,17 @@ Output ONLY this JSON (no markdown, no explanation, no other text):
 
     try:
         # Single API call to evaluate
-        print(f"      → Calling Groq API for evaluation...", flush=True)
-        response_data = call_groq_api(
-            messages=[
-                {"role": "system", "content": f"You are an expert at evaluating narrative consistency. Extract information carefully about {character if character else 'the story'} and provide detailed comparisons. Be aggressive in finding relevant information."},
-                {"role": "user", "content": evaluation_prompt}
-            ],
+        print(f"      → Calling Gemini API for evaluation...", flush=True)
+        
+        # Combine system and user messages into a single prompt for Gemini
+        system_message = f"You are an expert at evaluating narrative consistency. Extract information carefully about {character if character else 'the story'} and provide detailed comparisons. Be aggressive in finding relevant information."
+        full_prompt = f"{system_message}\n\n{evaluation_prompt}"
+        
+        response_data = call_gemini_api(
+            prompt=full_prompt,
             temperature=0.1,
-            max_tokens=1024
+            max_tokens=1024,
+            model=GEMINI_MODEL
         )
         print(f"      → API call completed, parsing response...", flush=True)
         
@@ -221,143 +222,68 @@ Output ONLY this JSON (no markdown, no explanation, no other text):
             end = raw.index("```", start)
             raw = raw[start:end].strip()
         
-        # Look for JSON object pattern { ... }
-        json_object_start = re.search(r'\{\s*"', raw, re.DOTALL)
+        # Remove reasoning tags
+        if "<think>" in raw.lower():
+            raw = re.sub(r'<think>.*?</think>', '', raw, flags=re.DOTALL | re.IGNORECASE)
+            raw = raw.strip()
         
-        if json_object_start:
-            start = json_object_start.start()
-            # Find matching closing brace by counting
-            brace_count = 0
-            in_string = False
-            escape_next = False
-            end = start
-            
-            for i in range(start, len(raw)):
-                char = raw[i]
-                
-                if escape_next:
-                    escape_next = False
-                    continue
-                
-                if char == '\\':
-                    escape_next = True
-                    continue
-                
-                if char == '"' and not escape_next:
-                    in_string = not in_string
-                    continue
-                
-                if not in_string:
-                    if char == '{':
-                        brace_count += 1
-                    elif char == '}':
-                        brace_count -= 1
-                        if brace_count == 0:
-                            end = i + 1
-                            break
-            
-            if end > start:
-                # Found matching braces
-                json_str = raw[start:end]
+        # Try to parse JSON
+        parsed = None
+        try:
+            parsed = json.loads(raw)
+        except json.JSONDecodeError:
+            # Try to extract JSON object
+            json_match = re.search(r'\{.*\}', raw, re.DOTALL)
+            if json_match:
                 try:
-                    result = json.loads(json_str)
-                    verdict = result.get('verdict', 'UNCERTAIN').upper()
-                    if verdict not in ['CONSISTENT', 'INCONSISTENT', 'UNCERTAIN']:
-                        verdict = 'UNCERTAIN'
-                    
-                    print(f"      ✓ Successfully parsed evaluation result: {verdict}", flush=True)
-                    return {
-                        'verdict': verdict,
-                        'answer': result.get('answer', 'NOT_MENTIONED'),
-                        'consistent': verdict == 'CONSISTENT',
-                        'confidence': float(result.get('confidence', 0.5)),
-                        'reasoning': result.get('reasoning', '')
-                    }
-                except json.JSONDecodeError as je:
-                    print(f"      ⚠️  First parsing attempt failed, trying fallback...", flush=True)
-                    pass
-        
-        # Fallback: try to find JSON object using bracket counting from any { position
-        if "{" in raw:
-            start = raw.index("{")
-            brace_count = 0
-            in_string = False
-            escape_next = False
-            end = start
-            
-            for i in range(start, len(raw)):
-                char = raw[i]
-                if escape_next:
-                    escape_next = False
-                    continue
-                if char == '\\':
-                    escape_next = True
-                    continue
-                if char == '"' and not escape_next:
-                    in_string = not in_string
-                    continue
-                if not in_string:
-                    if char == '{':
-                        brace_count += 1
-                    elif char == '}':
-                        brace_count -= 1
-                        if brace_count == 0:
-                            end = i + 1
-                            break
-            
-            if end > start:
-                try:
-                    json_str = raw[start:end]
-                    result = json.loads(json_str)
-                    verdict = result.get('verdict', 'UNCERTAIN').upper()
-                    if verdict not in ['CONSISTENT', 'INCONSISTENT', 'UNCERTAIN']:
-                        verdict = 'UNCERTAIN'
-                    
-                    return {
-                        'verdict': verdict,
-                        'answer': result.get('answer', 'NOT_MENTIONED'),
-                        'consistent': verdict == 'CONSISTENT',
-                        'confidence': float(result.get('confidence', 0.5)),
-                        'reasoning': result.get('reasoning', '')
-                    }
+                    parsed = json.loads(json_match.group())
                 except json.JSONDecodeError:
                     pass
         
-        # If all parsing fails, try to extract verdict and answer from text
-        verdict_match = re.search(r'(CONSISTENT|INCONSISTENT|UNCERTAIN)', raw, re.IGNORECASE)
-        answer_match = re.search(r'"answer"\s*:\s*"([^"]*)"', raw)
+        if not parsed:
+            raise Exception(f"Could not parse JSON from response: {raw[:200]}")
         
-        verdict = 'UNCERTAIN'
-        if verdict_match:
-            verdict = verdict_match.group(1).upper()
+        # Extract fields
+        verdict = parsed.get('verdict', 'UNCERTAIN').upper()
+        answer = parsed.get('answer', 'NOT_MENTIONED')
+        confidence = float(parsed.get('confidence', 0.5))
+        reasoning = parsed.get('reasoning', '')
         
-        answer = 'NOT_MENTIONED'
-        if answer_match:
-            answer = answer_match.group(1)
+        # Validate verdict
+        if verdict not in ['CONSISTENT', 'INCONSISTENT', 'UNCERTAIN']:
+            verdict = 'UNCERTAIN'
+        
+        # Determine consistency boolean
+        consistent = (verdict == 'CONSISTENT')
+        
+        print(f"      ✓ Successfully parsed evaluation result: {verdict}", flush=True)
         
         return {
             'verdict': verdict,
             'answer': answer,
-            'consistent': verdict == 'CONSISTENT',
-            'confidence': 0.3,
-            'reasoning': f'Extracted from response text (parsing failed): {raw[:200]}'
+            'consistent': consistent,
+            'confidence': confidence,
+            'reasoning': reasoning
         }
+        
     except Exception as e:
-        print(f"  ⚠️  Evaluation error: {e}", flush=True)
+        print(f"      ✗ Error in evaluation: {str(e)}", flush=True)
+        import traceback
+        print(f"      Traceback: {traceback.format_exc()[:300]}...", flush=True)
         return {
             'verdict': 'UNCERTAIN',
-            'answer': 'NOT_MENTIONED',
+            'answer': 'ERROR',
             'consistent': False,
             'confidence': 0.0,
-            'reasoning': f'Evaluation error: {str(e)[:100]}'
+            'reasoning': f'Error during evaluation: {str(e)[:100]}'
         }
 
 
 def apply_decision_rule(evaluations: List[Dict]) -> Dict:
     """
-    Decision rule: Aggregate results from evaluations.
+    Apply decision rule to aggregate evaluation results into final verdict.
     
-    SIMPLE LOGIC:
+    Simplified decision rule:
     1. If at least 1 INCONSISTENT → INCONSISTENT (any contradiction invalidates backstory)
     2. All other cases → CONSISTENT (no contradictions found)
     
@@ -381,22 +307,27 @@ def apply_decision_rule(evaluations: List[Dict]) -> Dict:
         else:
             uncertain_count += 1
     
-    total_evaluations = len(evaluations)
-    
-    # RULE 1: ANY inconsistency found → INCONSISTENT
+    # Apply decision rule: Any contradiction → INCONSISTENT, else CONSISTENT
     if inconsistent_count > 0:
-        verdict = "INCONSISTENT"
-        verdict_reason = f"{inconsistent_count} contradiction(s) found out of {total_evaluations} evaluations"
-        confidence = min(0.7 + (inconsistent_count / total_evaluations) * 0.3, 1.0)
-    
-    # RULE 2: All other cases → CONSISTENT
+        final_verdict = 'INCONSISTENT'
+        verdict_reason = f"Found {inconsistent_count} contradiction(s): {consistent_count} consistent, {uncertain_count} uncertain out of {len(evaluations)} evaluations"
     else:
-        verdict = "CONSISTENT"
-        verdict_reason = f"No contradictions found: {consistent_count} consistent, {uncertain_count} uncertain out of {total_evaluations} evaluations"
-        confidence = 0.7 + (consistent_count / total_evaluations) * 0.2 if total_evaluations > 0 else 0.7
+        final_verdict = 'CONSISTENT'
+        verdict_reason = f"No contradictions found: {consistent_count} consistent, {uncertain_count} uncertain out of {len(evaluations)} evaluations"
+    
+    # Calculate confidence (simplified)
+    total_evaluations = len(evaluations)
+    if total_evaluations == 0:
+        confidence = 0.0
+    elif inconsistent_count > 0:
+        # High confidence if contradictions found
+        confidence = min(0.9, 0.5 + (inconsistent_count / total_evaluations) * 0.4)
+    else:
+        # Moderate confidence if no contradictions
+        confidence = min(0.9, 0.5 + (consistent_count / total_evaluations) * 0.4)
     
     return {
-        'verdict': verdict,
+        'verdict': final_verdict,
         'verdict_reason': verdict_reason,
         'confidence': confidence,
         'signals': {
