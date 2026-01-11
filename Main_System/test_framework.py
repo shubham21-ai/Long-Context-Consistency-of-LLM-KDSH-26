@@ -68,11 +68,11 @@ class NarrativeConsistencyTester:
             pathway_port: Pathway server port (default: 8745)
             use_hybrid_search: Enable hybrid search (BM25 + semantic) - default: False
         """
-        # Set default paths relative to lohiya_code directory
+        # Set default paths relative to Main_System directory
         if books_dir is None:
             books_dir = Path(__file__).parent.parent / "Books"
         if test_csv is None:
-            test_csv = Path(__file__).parent.parent / "train.csv"
+            test_csv = Path(__file__).parent.parent / "test.csv"
         
         self.books_dir = Path(books_dir)
         self.test_csv = Path(test_csv)
@@ -577,7 +577,7 @@ def main():
     
     parser = argparse.ArgumentParser(description='Test narrative consistency framework')
     parser.add_argument('--books-dir', default=None, help='Directory containing books (default: ../Books) - not used with Pathway')
-    parser.add_argument('--test-csv', default=None, help='Path to test CSV file (default: ../train.csv)')
+    parser.add_argument('--test-csv', default=None, help='Path to test CSV file (default: ../test.csv)')
     parser.add_argument('--k', type=int, default=10, help='Number of chunks to retrieve')
     parser.add_argument('--max-tests', type=int, default=None, help='Maximum number of tests to run')
     parser.add_argument('--pathway-host', default='127.0.0.1', help='Pathway server host (default: 127.0.0.1)')
@@ -606,6 +606,95 @@ def main():
     with open(output_file, 'w', encoding='utf-8') as f:
         json.dump(summary, f, indent=2, default=str)
     print(f"\nResults saved to {output_file}", flush=True)
+    
+    # Save results to CSV (required format for submission: Story ID | Prediction | Rationale)
+    csv_output_file = Path('results.csv')
+    with open(csv_output_file, 'w', encoding='utf-8', newline='') as f:
+        writer = csv.writer(f)
+        # Write header
+        writer.writerow(['Story ID', 'Prediction', 'Rationale'])
+        
+        # Write results (sorted by Story ID for consistency)
+        sorted_results = sorted(
+            [r for r in summary['results'] if r.get('success', False)],
+            key=lambda x: int(x.get('test_case', {}).get('id', 0)) if x.get('test_case', {}).get('id', '').isdigit() else 0
+        )
+        
+        for result in sorted_results:
+            test_case = result.get('test_case', {})
+            story_id = test_case.get('id', '')
+            
+            # Get prediction: 1 = consistent, 0 = inconsistent
+            if 'decision_rule' in result:
+                verdict = result['decision_rule'].get('verdict', 'UNCERTAIN')
+                prediction = 1 if verdict == 'CONSISTENT' else 0
+                
+                # Generate clear rationale that explains why verdict is CONSISTENT or INCONSISTENT
+                rationale = ""
+                if 'evaluations' in result and result['evaluations']:
+                    evaluations = result['evaluations']
+                    
+                    # Count evaluations by type
+                    consistent_count = sum(1 for e in evaluations if e.get('verdict') == 'CONSISTENT')
+                    inconsistent_count = sum(1 for e in evaluations if e.get('verdict') == 'INCONSISTENT')
+                    uncertain_count = sum(1 for e in evaluations if e.get('verdict') == 'UNCERTAIN')
+                    
+                    if verdict == 'INCONSISTENT':
+                        # For INCONSISTENT: Use the first INCONSISTENT reasoning which explains the contradiction
+                        inconsistent_evals = [e for e in evaluations if e.get('verdict') == 'INCONSISTENT' and e.get('reasoning')]
+                        if inconsistent_evals:
+                            rationale = inconsistent_evals[0].get('reasoning', '').strip()
+                        else:
+                            rationale = f"Contradiction found: {inconsistent_count} inconsistency(s) detected."
+                    else:  # CONSISTENT
+                        # For CONSISTENT: Explain why it's consistent (no contradictions found)
+                        consistent_evals = [e for e in evaluations if e.get('verdict') == 'CONSISTENT' and e.get('reasoning')]
+                        
+                        if consistent_evals:
+                            # Use CONSISTENT reasoning(s) - they explain why it's consistent
+                            if len(consistent_evals) == 1:
+                                rationale = consistent_evals[0].get('reasoning', '').strip()
+                            else:
+                                # Combine first 2 consistent reasonings
+                                rationale = " ".join([e.get('reasoning', '').strip() for e in consistent_evals[:2]])
+                        else:
+                            # No CONSISTENT evaluations, but no contradictions either
+                            uncertain_evals = [e for e in evaluations if e.get('verdict') == 'UNCERTAIN' and e.get('reasoning')]
+                            if uncertain_evals:
+                                uncertain_reasoning = uncertain_evals[0].get('reasoning', '').strip()
+                                # Frame as "no contradictions found"
+                                if 'not mention' in uncertain_reasoning.lower() or 'no information' in uncertain_reasoning.lower():
+                                    rationale = f"No contradictions found. {uncertain_reasoning}"
+                                else:
+                                    rationale = f"No contradictions found: {uncertain_reasoning}"
+                            else:
+                                rationale = f"No contradictions found: {consistent_count} consistent, {uncertain_count} uncertain out of {len(evaluations)} evaluations."
+                    
+                    # Limit to 1-2 lines (approximately 200-250 chars for submission format)
+                    if rationale and len(rationale) > 250:
+                        # Truncate at sentence boundary if possible
+                        truncated = rationale[:247]
+                        last_period = truncated.rfind('.')
+                        last_newline = truncated.rfind('\n')
+                        cutoff = max(last_period, last_newline)
+                        if cutoff > 150:  # Only use sentence boundary if we have enough content
+                            rationale = truncated[:cutoff+1]
+                        else:
+                            rationale = truncated + "..."
+                    
+                    # If still no rationale, fallback to verdict_reason
+                    if not rationale:
+                        rationale = result['decision_rule'].get('verdict_reason', '')
+                else:
+                    # Fallback: use verdict_reason if no evaluations available
+                    rationale = result['decision_rule'].get('verdict_reason', '')
+            else:
+                prediction = 0  # Default to inconsistent if no decision rule
+                rationale = "No decision available"
+            
+            writer.writerow([story_id, prediction, rationale])
+    
+    print(f"Results saved to {csv_output_file} (submission format: Story ID | Prediction | Rationale)", flush=True)
 
 
 if __name__ == "__main__":
