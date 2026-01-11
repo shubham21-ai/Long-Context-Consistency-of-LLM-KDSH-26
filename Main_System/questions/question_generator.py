@@ -10,28 +10,36 @@ os.environ['TOKENIZERS_PARALLELISM'] = 'false'
 # Groq API configuration
 GROQ_MODEL = "qwen/qwen3-32b"
 
-SYSTEM_PROMPT = """You are an expert question generation system specialized in narrative consistency checking and story verification.
+SYSTEM_PROMPT = """You are an expert question generation system for RAG-based narrative consistency checking.
 
-Your task is to generate specific, testable, and verifiable questions based on events extracted from character backstories. These questions will be used to verify whether the main story narrative is consistent with the character's backstory events.
+Your task is to generate ONE optimal, pinpoint-accurate question per backstory event that can be answered from story text using semantic search.
 
-QUESTION GENERATION PRINCIPLES:
-1. Specificity: Questions must be specific enough to be answerable from the story text
-2. Verifiability: Questions should focus on factual information that can be found or verified in the story
-3. Context Preservation: Include temporal and location context when available
-4. Clarity: Questions should be clear, unambiguous, and directly related to the event
-5. Coverage: Generate 2-3 questions per event to cover different aspects (what, when, where, how, why)
+CRITICAL RULE - CHARACTER NAME USAGE:
+- ALWAYS use the explicit character name provided (never use pronouns: he, she, they, his, her, etc.)
+- Pronouns are BAD for RAG retrieval - they don't match keywords in the story
+- Character names are ESSENTIAL for accurate semantic search
+- Even if the event mentions other subjects, always focus on the main character name in questions
 
-QUESTION TYPES TO GENERATE:
-- Factual verification questions (e.g., "What does the story say about...")
-- Temporal questions (e.g., "When did [event] occur according to the story?")
-- Location questions (e.g., "Where did [event] take place in the story?")
-- Relationship questions (e.g., "How does the story describe the relationship between...")
-- Action/Event questions (e.g., "How does the story describe [character]'s [action]?")
+RAG-FRIENDLY QUESTION PRINCIPLES:
+1. Pinpoint Accuracy: Question must target the EXACT factual claim from the backstory
+2. RAG-Optimized: Use explicit character names (NO pronouns), specific actions, locations, times
+3. Single Focus: One question should test ONE specific claim (not multiple aspects)
+4. Answerable: Must be answerable by finding text in the story (avoid abstract questions)
+5. Verifiable: Question should have a clear yes/no/factual answer in the story
+6. Explicit Names: ALWAYS use character names explicitly - this is CRITICAL for RAG retrieval
+
+QUESTION STRUCTURE (choose the most critical aspect):
+- If time is mentioned: Focus on temporal aspect ("When did [CHARACTER_NAME] [action]?")
+- If location is mentioned: Focus on location ("Where did [CHARACTER_NAME] [action]?")
+- If specific action/event: Focus on the action ("What does the story say about [CHARACTER_NAME] [action]?")
+- If relationship/object: Focus on the relationship ("How does the story describe [CHARACTER_NAME]'s [relationship]?")
+
+CRITICAL: Generate ONLY 1 question per event. It must:
+1. Use the character name explicitly (NO pronouns - pronouns break RAG retrieval)
+2. Be the MOST critical question that can definitively verify or contradict the backstory claim
 
 OUTPUT FORMAT:
-Return a JSON array of question strings. Each question should be a complete, grammatically correct interrogative sentence ending with a question mark.
-
-IMPORTANT: Generate only 2 questions per event to minimize API usage. Focus on the most critical aspects (what and when/where)."""
+Return a JSON array with exactly ONE question string ending with a question mark. The question MUST use the character name explicitly."""
 
 def generate_questions_from_event(event: Event, main_character: str, delay: float = 0.0) -> list[str]:
     """
@@ -64,36 +72,61 @@ def generate_questions_from_event(event: Event, main_character: str, delay: floa
     
     event_description = "\n".join(event_parts) if event_parts else "Event details not fully specified"
     
-    user_prompt = f"""Generate 2-3 specific, testable questions based on the following backstory event. These questions will be used to verify if the main story narrative mentions or is consistent with this event.
+    user_prompt = f"""Generate ONE optimal, RAG-friendly question to verify if the story confirms or contradicts this backstory claim.
 
 BACKSTORY EVENT:
 {event_description}
 
 MAIN CHARACTER: {main_character}
 
-INSTRUCTIONS:
-1. Generate exactly 2 questions that can verify if the main story mentions or describes this event
-2. Make questions specific and verifiable - they should be answerable by searching the story text
-3. Include temporal context in questions if time information is available (e.g., "When did [event] occur?", "What happened at [time]?")
-4. Include location context in questions if location information is available (e.g., "Where did [event] take place?", "What happened in [location]?")
-5. Focus on what the story says about the event, not what should be true
-6. Vary question types: factual, temporal, location, relationship, or action-based questions
-7. Ensure questions are clear, unambiguous, and directly related to the event
+CRITICAL RULE - CHARACTER NAME USAGE (MANDATORY):
+- You MUST use the character name "{main_character}" EXPLICITLY in the question
+- NEVER use pronouns (he, she, they, his, her, their, him, her, them, etc.)
+- Pronouns are TERRIBLE for RAG retrieval - they don't match keywords in story text
+- ALWAYS use "{main_character}" directly, even if the event mentions other subjects
+- Example: Use "When did {main_character} learn to track?" NOT "When did he learn to track?"
 
-EXAMPLES OF GOOD QUESTIONS:
-- "What does the story say about {event.subject} {event.relation}?"
-- "When did {event.subject} {event.relation} according to the story?"
-- "Where did {event.subject} {event.relation} in the story?"
-- "How does the story describe {event.subject}'s {event.relation}?"
-- "What is mentioned about {event.subject} {event.relation} {event.object if event.object else ''}?"
+TASK: Generate the SINGLE most critical question that can definitively verify this backstory claim using semantic search.
 
-Return a JSON array in this exact format with exactly 2 questions:
+SELECTION CRITERIA (choose the MOST critical aspect):
+1. If TIME is mentioned → Temporal question (highest priority)
+   Example: "When did {main_character} {event.relation}?"
+   
+2. If LOCATION is mentioned → Location question (second priority)
+   Example: "Where did {main_character} {event.relation}?"
+   
+3. If SPECIFIC ACTION/EVENT → Action question (third priority)
+   Example: "What does the story say about {main_character} {event.relation}?"
+   
+4. If RELATIONSHIP/OBJECT → Relationship question
+   Example: "How does the story describe {main_character}'s {event.relation} {event.object if event.object else ''}?"
+
+RAG-OPTIMIZATION REQUIREMENTS (MANDATORY):
+- MUST include "{main_character}" explicitly in question (NO pronouns - this is CRITICAL)
+- Include specific action/event keywords ({event.relation}) that appear in backstory
+- Use concrete terms (names, places, actions) not abstract concepts
+- Question should match phrases likely to appear in story text
+
+BAD EXAMPLES (DO NOT USE - pronouns break RAG):
+❌ "When did he learn to track?"
+❌ "What happened to him?"
+❌ "Where did they go?"
+
+GOOD EXAMPLES (USE THESE - explicit names):
+✅ "When did {main_character} learn to track?"
+✅ "What does the story say about {main_character} learning to track?"
+✅ "Where did {main_character} go?"
+
+CRITICAL: Generate ONLY 1 question. It must:
+1. Use "{main_character}" explicitly (NO pronouns)
+2. Be the MOST definitive question to verify this specific claim
+
+Return ONLY a JSON array with exactly ONE question using "{main_character}" explicitly:
 [
-  "First specific question about the event?",
-  "Second specific question about the event?"
+  "Question using {main_character} explicitly?"
 ]
 
-Output ONLY the JSON array, no additional text or explanations."""
+CRITICAL: Output ONLY valid JSON. Start with [ and end with ]. No markdown, no code blocks, no explanations."""
 
     try:
         # Import Groq client
@@ -115,8 +148,8 @@ Output ONLY the JSON array, no additional text or explanations."""
                         {"role": "system", "content": SYSTEM_PROMPT},
                         {"role": "user", "content": user_prompt}
                     ],
-                    temperature=0.3,
-                    max_completion_tokens=1024,
+                    temperature=0.1,  # Lower temperature for more consistent, focused questions
+                    max_completion_tokens=256,  # Reduced since we only need 1 question
                     stream=False
                 )
                 
@@ -134,111 +167,110 @@ Output ONLY the JSON array, no additional text or explanations."""
                 error_str = str(e).lower()
                 if 'rate' in error_str or 'limit' in error_str or '429' in error_str:
                     if attempt < max_retries - 1:
-                        print(f"  Rate limit hit, retrying immediately... (attempt {attempt + 1}/{max_retries})", flush=True)
+                        import time
+                        retry_delay = 0.5 * (attempt + 1)  # Exponential backoff
+                        time.sleep(retry_delay)
                         continue
                 # If not a rate limit error or max retries reached, raise
-                raise
+                if attempt == max_retries - 1:
+                    raise
         
-        # Extract JSON from response (handle markdown code blocks and reasoning if present)
-        try:
+        # Robust JSON extraction with multiple fallbacks
+        import re
+        raw = raw.strip()
+        
+        # Remove markdown code blocks if present
+        if "```json" in raw:
+            start = raw.index("```json") + 7
+            end = raw.index("```", start)
+            raw = raw[start:end].strip()
+        elif "```" in raw:
+            start = raw.index("```") + 3
+            end = raw.index("```", start)
+            raw = raw[start:end].strip()
+        
+        # Remove reasoning tags (qwen model sometimes adds these)
+        if "<think>" in raw.lower():
+            raw = re.sub(r'<think>.*?</think>', '', raw, flags=re.DOTALL | re.IGNORECASE)
             raw = raw.strip()
-            import re
-            
-            # Remove markdown code blocks if present
-            if "```json" in raw:
-                start = raw.index("```json") + 7
-                end = raw.index("```", start)
-                raw = raw[start:end].strip()
-            elif "```" in raw:
-                start = raw.index("```") + 3
-                end = raw.index("```", start)
-                raw = raw[start:end].strip()
-            
-            # Handle reasoning text - find JSON array using pattern matching
-            # Strategy: Look for JSON array pattern [ "string" ] to avoid brackets in reasoning text
-            # Try to find a proper JSON array start: [ followed by whitespace and "
-            json_array_start = re.search(r'\[\s*"', raw, re.DOTALL)
-            
-            if json_array_start:
-                start = json_array_start.start()
-                # Find matching closing bracket by counting
-                bracket_count = 0
-                in_string = False
-                escape_next = False
-                end = start
-                
-                for i in range(start, len(raw)):
-                    char = raw[i]
+        
+        # Remove common prefixes that LLMs add
+        prefixes_to_remove = [
+            r'^okay,?\s*',
+            r'^sure,?\s*',
+            r'^here.*?:?\s*',
+            r'^the.*?:?\s*',
+        ]
+        for prefix in prefixes_to_remove:
+            raw = re.sub(prefix, '', raw, flags=re.IGNORECASE)
+            raw = raw.strip()
+        
+        parsed = None
+        
+        # Strategy 1: Try direct JSON parse
+        try:
+            parsed = json.loads(raw)
+        except json.JSONDecodeError:
+            pass
+        
+        # Strategy 2: Extract JSON array using bracket counting
+        if parsed is None:
+            json_start = raw.find('[')
+            if json_start != -1:
+                try:
+                    bracket_count = 0
+                    in_string = False
+                    escape_next = False
                     
-                    if escape_next:
-                        escape_next = False
-                        continue
-                    
-                    if char == '\\':
-                        escape_next = True
-                        continue
-                    
-                    if char == '"' and not escape_next:
-                        in_string = not in_string
-                        continue
-                    
-                    if not in_string:
-                        if char == '[':
-                            bracket_count += 1
-                        elif char == ']':
-                            bracket_count -= 1
-                            if bracket_count == 0:
-                                end = i + 1
-                                break
-                
-                if end > start:
-                    # Found matching brackets
-                    json_str = raw[start:end]
-                    parsed = json.loads(json_str)
-                else:
-                    # Bracket counting failed, try regex pattern
-                    json_array_pattern = r'\[\s*"[^"]*"\s*(?:,\s*"[^"]*"\s*)*\]'
-                    json_match = re.search(json_array_pattern, raw, re.DOTALL)
-                    if json_match:
-                        parsed = json.loads(json_match.group())
-                    else:
-                        raise ValueError("Could not find complete JSON array")
-            elif "[" in raw and "]" in raw:
-                # Fallback: try regex pattern for array of strings
-                json_array_pattern = r'\[\s*"[^"]*"\s*(?:,\s*"[^"]*"\s*)*\]'
-                json_match = re.search(json_array_pattern, raw, re.DOTALL)
-                if json_match:
-                    parsed = json.loads(json_match.group())
-                else:
-                    # Last resort: find first [ and last ] (might include reasoning text)
-                    start = raw.index("[")
-                    end = raw.rindex("]") + 1
-                    parsed = json.loads(raw[start:end])
-            else:
-                # Try to parse the entire response as JSON
-                parsed = json.loads(raw)
-        except (ValueError, json.JSONDecodeError) as e:
-            print(f"  ⚠️  JSON parsing error: {e}", flush=True)
-            print(f"  Raw response (first 500 chars): {raw[:500]}...", flush=True)
-            # Try more aggressive extraction patterns
-            import re
+                    for i in range(json_start, len(raw)):
+                        char = raw[i]
+                        if escape_next:
+                            escape_next = False
+                            continue
+                        if char == '\\':
+                            escape_next = True
+                            continue
+                        if char == '"' and not escape_next:
+                            in_string = not in_string
+                            continue
+                        if not in_string:
+                            if char == '[':
+                                bracket_count += 1
+                            elif char == ']':
+                                bracket_count -= 1
+                                if bracket_count == 0:
+                                    parsed = json.loads(raw[json_start:i+1])
+                                    break
+                except (ValueError, json.JSONDecodeError):
+                    pass
+        
+        # Strategy 3: Regex pattern matching
+        if parsed is None:
             json_patterns = [
                 r'\[\s*"[^"]*"\s*(?:,\s*"[^"]*"\s*)*\]',  # Array of strings
-                r'\[.*?\]',  # Any array
+                r'\[.*?\]',  # Any array (last resort)
             ]
-            
             for pattern in json_patterns:
                 json_match = re.search(pattern, raw, re.DOTALL)
                 if json_match:
                     try:
-                        json_str = json_match.group()
-                        parsed = json.loads(json_str)
-                        print(f"  ✓ Successfully extracted JSON using fallback pattern", flush=True)
+                        parsed = json.loads(json_match.group())
                         break
                     except json.JSONDecodeError:
                         continue
-            else:
-                raise Exception(f"Could not parse JSON from response. First 500 chars: {raw[:500]}")
+        
+        # Strategy 4: Find first [ and last ] (last resort)
+        if parsed is None and "[" in raw and "]" in raw:
+            try:
+                start = raw.index("[")
+                end = raw.rindex("]") + 1
+                parsed = json.loads(raw[start:end])
+            except (ValueError, json.JSONDecodeError):
+                pass
+        
+        # If all strategies failed, use fallback (don't raise, let fallback handle it)
+        if parsed is None:
+            raise Exception(f"JSON parsing failed")
         
         # Validate and return questions
         questions = []
@@ -253,11 +285,11 @@ Output ONLY the JSON array, no additional text or explanations."""
         return questions if questions else []
         
     except Exception as e:
-        print(f"Error generating questions: {e}")
         # Fallback: generate a simple question if LLM parsing fails
+        # (Error message suppressed to reduce noise - fallback will generate valid question)
+        # IMPORTANT: Use main_character name explicitly (no pronouns)
         fallback_parts = []
-        if event.subject:
-            fallback_parts.append(f"what does the story say about {event.subject}")
+        fallback_parts.append(f"what does the story say about {main_character}")  # Always use character name
         if event.relation:
             fallback_parts.append(f"{event.relation}")
         if event.object:

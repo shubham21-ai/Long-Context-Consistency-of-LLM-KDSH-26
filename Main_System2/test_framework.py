@@ -11,9 +11,10 @@ This framework:
 import csv
 import json
 import sys
+import tempfile
 import os
+import shutil
 import time
-import requests
 from pathlib import Path
 from typing import Dict, List, Tuple
 
@@ -26,92 +27,73 @@ try:
 except:
     pass
 
+# Add lohiya_code to path
+sys.path.insert(0, str(Path(__file__).parent))
+
 from backstory.claim_extractor import extract_claims
 from questions.question_generator import generate_questions_from_event
+from rag import RAG
 from evaluator import evaluate_consistency, apply_decision_rule
-
-# Try to import hybrid retriever (optional)
-try:
-    import sys
-    pathway_code_path = Path(__file__).parent / "Pathway_code"
-    if pathway_code_path.exists():
-        sys.path.insert(0, str(pathway_code_path))
-    from hybrid_retriever import HybridRetriever
-    HYBRID_RETRIEVER_AVAILABLE = True
-except ImportError:
-    HYBRID_RETRIEVER_AVAILABLE = False
-    HybridRetriever = None
-
-# Import Pathway VectorStoreClient
-pathway_server_path = Path(__file__).parent / "Pathway_code"
-sys.path.insert(0, str(pathway_server_path))
-try:
-    from server import VectorStoreClient
-except ImportError:
-    # Fallback: VectorStoreClient not available, will use direct HTTP requests
-    VectorStoreClient = None
-    print("⚠️  VectorStoreClient not available, will use direct HTTP requests", flush=True)
 
 
 class NarrativeConsistencyTester:
     """Test framework for narrative consistency checking."""
     
-    def __init__(self, books_dir: str = None, test_csv: str = None,
-                 pathway_host: str = "127.0.0.1", pathway_port: int = 8745,
-                 use_hybrid_search: bool = False):
+    def __init__(self, books_dir: str = None, test_csv: str = None, 
+                 model_llm: str = "gemini-2.0-flash", 
+                 model_embedding: str = "models/embedding-001"):
         """
         Initialize the test framework.
         
         Args:
-            books_dir: Directory containing novel text files (default: ../Books) - not used, kept for compatibility
+            books_dir: Directory containing novel text files (default: ../Books)
             test_csv: Path to test CSV file with backstories (default: ../test.csv)
-            pathway_host: Pathway server host (default: 127.0.0.1)
-            pathway_port: Pathway server port (default: 8745)
-            use_hybrid_search: Enable hybrid search (BM25 + semantic) - default: False
+            model_llm: Gemini LLM model name
+            model_embedding: Gemini embedding model name
         """
         # Set default paths relative to lohiya_code directory
         if books_dir is None:
             books_dir = Path(__file__).parent.parent / "Books"
         if test_csv is None:
-            test_csv = Path(__file__).parent.parent / "train.csv"
+            test_csv = Path(__file__).parent.parent / "test.csv"
         
         self.books_dir = Path(books_dir)
         self.test_csv = Path(test_csv)
-        self.pathway_host = pathway_host
-        self.pathway_port = pathway_port
-        self.pathway_url = f"http://{pathway_host}:{pathway_port}"
-        self.use_hybrid_search = use_hybrid_search
+        self.books_cache = {}  # Cache loaded books
+        self.model_llm = model_llm
+        self.model_embedding = model_embedding
         
-        # Initialize Pathway client
-        if VectorStoreClient:
-            try:
-                self.pathway_client = VectorStoreClient(host=pathway_host, port=pathway_port)
-                print(f"✓ Connected to Pathway server at {self.pathway_url}", flush=True)
-            except Exception as e:
-                print(f"⚠️  Warning: Could not initialize Pathway client: {e}", flush=True)
-                self.pathway_client = None
-        else:
-            self.pathway_client = None
+    def load_book(self, book_name: str) -> str:
+        """
+        Load a book from the Books directory.
         
-        # Initialize hybrid retriever if enabled
-        self.hybrid_retriever = None
-        if use_hybrid_search and HYBRID_RETRIEVER_AVAILABLE:
-            try:
-                print("🔧 Initializing hybrid retriever (BM25 + semantic)...", flush=True)
-                self.hybrid_retriever = HybridRetriever(pathway_url=self.pathway_url)
-                # Build BM25 index by sampling from Pathway server
-                print("  → Building BM25 index from Pathway server...", flush=True)
-                sample_count = self.hybrid_retriever.build_bm25_from_pathway(max_samples=5000)
-                print(f"✓ Hybrid search enabled (BM25 index: {sample_count} documents)", flush=True)
-            except Exception as e:
-                print(f"⚠️  Warning: Could not initialize hybrid retriever: {e}", flush=True)
-                print(f"  Falling back to semantic-only search", flush=True)
-                self.hybrid_retriever = None
-                self.use_hybrid_search = False
-        elif use_hybrid_search and not HYBRID_RETRIEVER_AVAILABLE:
-            print("⚠️  Warning: Hybrid retriever not available (rank_bm25 not installed?)", flush=True)
-            print("  Falling back to semantic-only search", flush=True)
-            self.use_hybrid_search = False
+        Args:
+            book_name: Name of the book (filename without .txt)
+            
+        Returns:
+            Book text content
+        """
+        if book_name in self.books_cache:
+            return self.books_cache[book_name]
+        
+        # Try to find the book file (case-insensitive)
+        book_files = list(self.books_dir.glob("*.txt"))
+        book_file = None
+        
+        for f in book_files:
+            if book_name.lower() in f.stem.lower() or f.stem.lower() in book_name.lower():
+                book_file = f
+                break
+        
+        if not book_file:
+            raise FileNotFoundError(f"Book '{book_name}' not found in {self.books_dir}")
+        
+        print(f"Loading book: {book_file.name}", flush=True)
+        with open(book_file, 'r', encoding='utf-8', errors='ignore') as f:
+            content = f.read()
+        
+        self.books_cache[book_name] = content
+        return content
     
     def load_test_data(self) -> List[Dict]:
         """
@@ -124,144 +106,18 @@ class NarrativeConsistencyTester:
         with open(self.test_csv, 'r', encoding='utf-8') as f:
             reader = csv.DictReader(f)
             for row in reader:
-                # Keep original string label from CSV ("consistent" or "contradict")
-                raw_label = row.get('label', '').strip().lower()
-                # Normalize to standard format but keep as string
-                if raw_label in ['consistent', '1', 'true']:
-                    label = 'consistent'
-                elif raw_label in ['contradict', 'inconsistent', '0', 'false']:
-                    label = 'contradict'
-                else:
-                    label = 'contradict'  # Default to contradict if unclear
-                
                 test_cases.append({
                     'id': row.get('id', ''),
                     'book_name': row.get('book_name', ''),
                     'char': row.get('char', ''),
                     'content': row.get('content', ''),
-                    'label': label  # String label: "consistent" or "contradict"
+                    'label': row.get('label', '0')  # Expected label (1 = consistent, 0 = inconsistent)
                 })
         return test_cases
     
-    def query_pathway_server(self, question: str, k: int = 15, character: str = "") -> List[str]:
-        """
-        Query Pathway RAG server and retrieve relevant chunks.
-        Uses hybrid search (BM25 + semantic) if enabled, else semantic-only.
-        
-        Args:
-            question: Query question
-            k: Number of chunks to retrieve
-            character: Character name (for filtering/boosting)
-            
-        Returns:
-            List of retrieved text chunks
-        """
-        # Use hybrid search if enabled and available
-        if self.use_hybrid_search and self.hybrid_retriever:
-            try:
-                results = self.hybrid_retriever.retrieve(
-                    query=question,
-                    k=k,
-                    use_rrf=True,  # Use Reciprocal Rank Fusion
-                    character=character
-                )
-                # Extract text from results
-                chunks = []
-                for result in results:
-                    if isinstance(result, dict):
-                        text = result.get('text', '')
-                        if text:
-                            chunks.append(text)
-                    else:
-                        chunks.append(str(result))
-                return chunks[:k] if chunks else []
-            except Exception as e:
-                print(f"    ⚠️  Hybrid search failed, falling back to semantic-only: {e}", flush=True)
-                # Fall through to semantic-only retrieval
-        
-        # Semantic-only retrieval (original implementation)
-        max_retries = 5
-        retry_delay = 2
-        
-        for attempt in range(max_retries):
-            try:
-                # Try using VectorStoreClient first
-                if self.pathway_client:
-                    results = self.pathway_client.query(question, k=k)
-                    # Extract text from results (results are dicts with 'text' key)
-                    chunks = []
-                    for result in results:
-                        if isinstance(result, dict):
-                            chunks.append(result.get('text', str(result)))
-                        else:
-                            chunks.append(str(result))
-                    return chunks[:k]
-                
-                # Fallback to direct HTTP request
-                url = f"{self.pathway_url}/v1/retrieve"
-                response = requests.post(
-                    url,
-                    json={"query": question, "k": k},
-                    headers={"Content-Type": "application/json"},
-                    timeout=30
-                )
-                response.raise_for_status()
-                results = response.json()
-                
-                # Extract text from results
-                chunks = []
-                if "results" in results:
-                    for result in results["results"]:
-                        if isinstance(result, dict):
-                            chunks.append(result.get('text', ''))
-                        else:
-                            chunks.append(str(result))
-                elif isinstance(results, list):
-                    for result in results:
-                        if isinstance(result, dict):
-                            chunks.append(result.get('text', ''))
-                        else:
-                            chunks.append(str(result))
-                
-                return chunks[:k]
-                
-            except (requests.exceptions.ConnectionError, requests.exceptions.RequestException) as e:
-                if attempt < max_retries - 1:
-                    print(f"    ⚠️  Connection attempt {attempt + 1} failed, retrying in {retry_delay}s...", flush=True)
-                    time.sleep(retry_delay)
-                else:
-                    print(f"    ✗ ERROR: Failed to connect to Pathway server after {max_retries} attempts", flush=True)
-                    raise ConnectionError(f"Could not connect to Pathway server at {self.pathway_url}: {e}")
-            except Exception as e:
-                print(f"    ✗ ERROR querying Pathway server: {e}", flush=True)
-                raise
-        
-        return []
-    
-    def check_server_status(self) -> bool:
-        """Check if Pathway server is running."""
-        try:
-            url = f"{self.pathway_url}/v1/statistics"
-            response = requests.post(
-                url,
-                json={},
-                headers={"Content-Type": "application/json"},
-                timeout=5
-            )
-            response.raise_for_status()
-            stats = response.json()
-            file_count = stats.get('file_count', 0)
-            print(f"✓ Pathway server is running ({file_count} files indexed)", flush=True)
-            return True
-        except Exception as e:
-            print(f"✗ Pathway server is not responding: {e}", flush=True)
-            print(f"  Make sure the server is running:", flush=True)
-            print(f"  cd Main_System/Pathway_code && python3 run-server-gdrive.py", flush=True)
-            return False
-    
     def process_test_case(self, test_case: Dict, k: int = 15) -> Dict:
         """
-        Process a single test case: extract claims, generate questions, query story using Pathway RAG.
+        Process a single test case: extract claims, generate questions, query story using RAG.
         
         Args:
             test_case: Dictionary with test case data
@@ -274,44 +130,88 @@ class NarrativeConsistencyTester:
         character = test_case['char']
         backstory = test_case['content']
         
+        # Create temporary file for story text (RAG class loads from directory)
+        temp_dir = tempfile.mkdtemp()
+        temp_file = os.path.join(temp_dir, "story.txt")
+        
         try:
-            # Check server status
-            if not self.check_server_status():
-                raise ConnectionError("Pathway server is not running. Please start it first.")
+            # Load the book
+            story_text = self.load_book(book_name)
+            
+            # Write story to temporary file
+            with open(temp_file, 'w', encoding='utf-8') as f:
+                f.write(story_text)
+            
+            # Initialize RAG system
+            rag = RAG(
+                model_llm=self.model_llm,
+                model_embedding=self.model_embedding,
+                data_dir=temp_dir
+            )
+            
+            # Load models
+            rag.load_model()
+            
+            # Load data from directory
+            rag.load_data()
+            
+            # Split data into chunks
+            rag.split_data()
+            
+            # Create embeddings
+            rag.embed_data()
+            
+            # Create search indices (FAISS + BM25)
+            rag.create_index()
             
             # Extract claims from backstory
+            print("Extracting claims from backstory...", flush=True)
             claims = extract_claims(backstory, character)
             
-            # Generate questions (optimized: 1 question per claim)
-            # Track which question corresponds to which claim
+            # Generate questions
+            print(f"Generating questions from {len(claims)} claims...", flush=True)
             questions = []
-            question_to_claim = {}  # Map question -> claim Event object
-            
-            for claim in claims:
+            for idx, claim in enumerate(claims, 1):
+                print(f"  Generating questions for claim {idx}/{len(claims)}...", flush=True)
                 event_questions = generate_questions_from_event(claim, character)
-                for question in event_questions:
-                    questions.append(question)
-                    question_to_claim[question] = claim  # Store mapping
+                questions.extend(event_questions)
             
-            # Query Pathway RAG server for each question
+            # Query RAG system for each question
+            print(f"\nQuerying RAG system (retrieving top {k} chunks per question)...", flush=True)
             rag_results = {}
-            for question in questions:
-                try:
-                    retrieved_chunks = self.query_pathway_server(question, k=k, character=character)
-                    rag_results[question] = retrieved_chunks
-                except Exception as e:
-                    rag_results[question] = []
+            for i, question in enumerate(questions, 1):
+                print(f"  Querying {i}/{len(questions)}: {question[:60]}...", flush=True)
+                retrieved_docs = rag.retrieve_data(question, k=k, character=character)  
+                # Extract text content from LangChain Document objects
+                retrieved_chunks = []
+                for doc in retrieved_docs[:k]:
+                    if hasattr(doc, 'page_content'):
+                        retrieved_chunks.append(doc.page_content)
+                    elif isinstance(doc, str):
+                        retrieved_chunks.append(doc)
+                    else:
+                        retrieved_chunks.append(str(doc))
+                rag_results[question] = retrieved_chunks
+                print(f"    ✓ Retrieved {len(retrieved_chunks)} chunks", flush=True)
+                if retrieved_chunks:
+                    print(f"    Preview: {retrieved_chunks[0][:80]}...", flush=True)
+                else:
+                    print(f"    ⚠️  WARNING: No chunks retrieved for this question!", flush=True)
+            
+            print("RAG queries completed", flush=True)
+            
+            # Get number of chunks safely
+            num_chunks = len(rag.texts) if hasattr(rag, 'texts') and rag.texts else 0
             
             result_dict = {
-                'test_case': test_case,
-                'claims': claims,
-                'questions': questions,
-                'question_to_claim': question_to_claim,  # Store mapping for evaluation
-                'rag_results': rag_results,
-                'num_chunks': sum(len(chunks) for chunks in rag_results.values()),  # Total chunks retrieved
-                'character': character,
-                'success': True
-            }
+            'test_case': test_case,
+            'claims': claims,
+            'questions': questions,
+            'rag_results': rag_results,
+            'num_chunks': num_chunks,
+            'character': character,  # ADDED: Store character name
+            'success': True
+        }
             
             print(f"  Processed {len(claims)} claims, generated {len(questions)} questions, retrieved chunks for all queries", flush=True)
             
@@ -325,6 +225,9 @@ class NarrativeConsistencyTester:
                 'traceback': traceback.format_exc(),
                 'success': False
             }
+        finally:
+            # Clean up temporary directory
+            shutil.rmtree(temp_dir, ignore_errors=True)
     
     def run_tests(self, k: int = 8, max_tests: int = None) -> Dict:
         """
@@ -405,48 +308,21 @@ class NarrativeConsistencyTester:
                     results.append(result)
                     continue
                 
-                # SINGLE EVALUATION: Compare retrieved answers with SPECIFIC claims only (not full backstory)
+                # SINGLE EVALUATION: Compare retrieved answers with backstory facts
                 print(f"\n  → Starting evaluation phase...", flush=True)
-                print(f"Evaluating {len(result['questions'])} questions against specific claims...", flush=True)
+                print(f"Evaluating {len(result['questions'])} questions against backstory facts...", flush=True)
                 evaluations = []
-                
-                # Helper function to convert Event to readable claim text
-                def event_to_claim_text(event):
-                    """Convert Event object to readable claim text string."""
-                    parts = []
-                    if event.subject:
-                        parts.append(event.subject)
-                    if event.relation:
-                        parts.append(event.relation)
-                    if event.object:
-                        parts.append(event.object)
-                    if event.time:
-                        parts.append(f"(time: {event.time})")
-                    if event.location:
-                        parts.append(f"(location: {event.location})")
-                    return " ".join(parts) if parts else ""
-                
-                question_to_claim = result.get('question_to_claim', {})
                 
                 for idx, question in enumerate(result['questions'], 1):
                     retrieved_chunks = result['rag_results'].get(question, [])
                     
-                    # Get the specific claim for this question (not the full backstory)
-                    claim_event = question_to_claim.get(question)
-                    if claim_event:
-                        # Convert Event to readable claim text
-                        specific_claim = event_to_claim_text(claim_event)
-                    else:
-                        # Fallback: if mapping missing, use minimal claim (should not happen)
-                        specific_claim = f"{test_case['char']} related event"
-                    
-                    # Single evaluation: Compare retrieved answer with SPECIFIC claim only
+                    # Single evaluation: Compare retrieved answer with backstory facts
                     print(f"  Evaluating {idx}/{len(result['questions'])}: {question[:60]}...", flush=True)
                     try:
                         eval_result = evaluate_consistency(
                             question,
                             retrieved_chunks,
-                            specific_claim  # Only the specific claim, not full backstory
+                            test_case['content']  # Full backstory as facts
                         )
                         
                         evaluations.append(eval_result)
@@ -478,7 +354,7 @@ class NarrativeConsistencyTester:
                 
                 result['evaluations'] = evaluations
                 result['decision_rule'] = decision_result
-                result['expected_label'] = test_case.get('label', 'contradict')  # Store expected label from CSV ("consistent" or "contradict")
+                result['expected_label'] = test_case.get('label', '0')  # Store expected label for accuracy
                 results.append(result)
                 
             except Exception as outer_e:
@@ -496,13 +372,12 @@ class NarrativeConsistencyTester:
         # Calculate accuracy based on decision rule verdicts vs expected labels
         for result in results:
             if result.get('success', False) and 'decision_rule' in result:
-                expected_label = result.get('expected_label', 'contradict').lower()  # From CSV: "consistent" or "contradict"
+                expected_label = result.get('expected_label', '0')
                 verdict = result['decision_rule']['verdict']
                 
-                # Map verdict to string label: INCONSISTENT -> "contradict", CONSISTENT -> "consistent"
-                predicted_label = 'contradict' if verdict == 'INCONSISTENT' else 'consistent'
+                # Map verdict to binary label: INCONSISTENT -> 0, CONSISTENT/LIKELY_CONSISTENT -> 1
+                predicted_label = '0' if verdict in ['INCONSISTENT'] else '1'
                 
-                # Compare string labels directly
                 if expected_label == predicted_label:
                     correct_predictions += 1
                 total_predictions += 1
@@ -571,8 +446,8 @@ class NarrativeConsistencyTester:
                 continue
             
             test_case = result['test_case']
-            expected_label = result.get('expected_label', 'contradict').lower()  # From CSV: "consistent" or "contradict"
-            expected_text = "INCONSISTENT" if expected_label == 'contradict' else "CONSISTENT"
+            expected_label = result.get('expected_label', '0')
+            expected_text = "INCONSISTENT" if expected_label == '0' else "CONSISTENT"
             
             print(f"\nTest {i}: {test_case['book_name']} - {test_case['char']}", flush=True)
             print(f"  Expected: {expected_text} (label: {expected_label})", flush=True)
@@ -581,9 +456,8 @@ class NarrativeConsistencyTester:
                 dr = result['decision_rule']
                 verdict = dr['verdict']
                 confidence = dr['confidence']
-                # Map verdict to string label for comparison
-                predicted_label = 'contradict' if verdict == 'INCONSISTENT' else 'consistent'
-                is_correct = expected_label == predicted_label
+                is_correct = (expected_label == '0' and verdict == 'INCONSISTENT') or \
+                            (expected_label == '1' and verdict in ['CONSISTENT', 'LIKELY_CONSISTENT'])
                 status = "✓ CORRECT" if is_correct else "✗ INCORRECT"
                 
                 print(f"  Predicted: {verdict} (confidence: {confidence:.2f}) {status}", flush=True)
@@ -612,23 +486,17 @@ def main():
     os.environ['PYTHONUNBUFFERED'] = '1'
     
     parser = argparse.ArgumentParser(description='Test narrative consistency framework')
-    parser.add_argument('--books-dir', default=None, help='Directory containing books (default: ../Books) - not used with Pathway')
-    parser.add_argument('--test-csv', default=None, help='Path to test CSV file (default: ../train.csv)')
+    parser.add_argument('--books-dir', default=None, help='Directory containing books (default: ../Books)')
+    parser.add_argument('--test-csv', default=None, help='Path to test CSV file (default: ../test.csv)')
     parser.add_argument('--k', type=int, default=10, help='Number of chunks to retrieve')
     parser.add_argument('--max-tests', type=int, default=None, help='Maximum number of tests to run')
-    parser.add_argument('--pathway-host', default='127.0.0.1', help='Pathway server host (default: 127.0.0.1)')
-    parser.add_argument('--pathway-port', type=int, default=8745, help='Pathway server port (default: 8745)')
-    parser.add_argument('--hybrid-search', action='store_true', help='Enable hybrid search (BM25 + semantic) for better accuracy')
     
     args = parser.parse_args()
     
     # Create tester
     tester = NarrativeConsistencyTester(
         books_dir=args.books_dir,
-        test_csv=args.test_csv,
-        pathway_host=args.pathway_host,
-        pathway_port=args.pathway_port,
-        use_hybrid_search=args.hybrid_search
+        test_csv=args.test_csv
     )
     
     # Run tests

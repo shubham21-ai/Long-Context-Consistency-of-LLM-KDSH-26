@@ -58,7 +58,7 @@ embeddings = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
 
 # Text splitter
 text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
-    chunk_size=512, chunk_overlap=50
+    chunk_size=1000, chunk_overlap=50
 )
 
 vector_server = VectorStoreServer.from_langchain_components(

@@ -353,13 +353,17 @@ Output ONLY this JSON (no markdown, no explanation, no other text):
         }
 
 
+# CHANGE 3: Improved decision rule (optional improvement)
 def apply_decision_rule(evaluations: List[Dict]) -> Dict:
     """
     Decision rule: Aggregate results from evaluations.
     
-    SIMPLE LOGIC:
-    1. If at least 1 INCONSISTENT → INCONSISTENT (any contradiction invalidates backstory)
-    2. All other cases → CONSISTENT (no contradictions found)
+    LOGIC:
+    1. ANY inconsistency found → INCONSISTENT (backstory contradicted)
+    2. Mostly UNCERTAIN (70%+) → INCONSISTENT (backstory not supported by evidence)
+    3. Majority CONSISTENT (50%+) with no inconsistencies → CONSISTENT
+    4. Some CONSISTENT but many UNCERTAIN → LIKELY_CONSISTENT
+    5. All UNCERTAIN → UNCERTAIN
     
     Args:
         evaluations: List of evaluation results, each with 'verdict'
@@ -384,16 +388,37 @@ def apply_decision_rule(evaluations: List[Dict]) -> Dict:
     total_evaluations = len(evaluations)
     
     # RULE 1: ANY inconsistency found → INCONSISTENT
+    # If story contradicts backstory even once, backstory is wrong
     if inconsistent_count > 0:
         verdict = "INCONSISTENT"
-        verdict_reason = f"{inconsistent_count} contradiction(s) found out of {total_evaluations} evaluations"
+        verdict_reason = f"{inconsistent_count} inconsistency/inconsistencies found out of {total_evaluations} evaluations"
         confidence = min(0.7 + (inconsistent_count / total_evaluations) * 0.3, 1.0)
     
-    # RULE 2: All other cases → CONSISTENT
-    else:
+    # RULE 2: Mostly UNCERTAIN (70%+) → INCONSISTENT
+    # If we can't find evidence for most claims, backstory is not supported
+    elif uncertain_count >= total_evaluations * 0.7:
+        verdict = "INCONSISTENT"
+        verdict_reason = f"Backstory not supported by text: {uncertain_count}/{total_evaluations} claims have no evidence"
+        confidence = 0.65
+    
+    # RULE 3: Majority CONSISTENT (50%+) and no inconsistencies → CONSISTENT
+    elif consistent_count >= total_evaluations * 0.5 and inconsistent_count == 0:
         verdict = "CONSISTENT"
-        verdict_reason = f"No contradictions found: {consistent_count} consistent, {uncertain_count} uncertain out of {total_evaluations} evaluations"
-        confidence = 0.7 + (consistent_count / total_evaluations) * 0.2 if total_evaluations > 0 else 0.7
+        verdict_reason = f"{consistent_count}/{total_evaluations} evaluations support the backstory"
+        confidence = min(0.6 + (consistent_count / total_evaluations) * 0.3, 0.95)
+    
+    # RULE 4: Some CONSISTENT but many UNCERTAIN → LIKELY_CONSISTENT
+    # We found some supporting evidence, but missing evidence for many claims
+    elif consistent_count > 0 and inconsistent_count == 0:
+        verdict = "LIKELY_CONSISTENT"
+        verdict_reason = f"Partial support: {consistent_count} consistent, {uncertain_count} uncertain out of {total_evaluations}"
+        confidence = 0.4 + (consistent_count / total_evaluations) * 0.2
+    
+    # RULE 5: All UNCERTAIN → UNCERTAIN
+    else:
+        verdict = "UNCERTAIN"
+        verdict_reason = f"No evidence found: {uncertain_count}/{total_evaluations} evaluations are uncertain"
+        confidence = 0.3
     
     return {
         'verdict': verdict,

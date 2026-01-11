@@ -58,12 +58,19 @@ data_sources.append(
 from custom_parser import CustomParse
 parser = CustomParse()
 
-# Embeddings - SentenceTransformer
-embeddings = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
+# Embeddings - SentenceTransformer (Upgraded to better model for SOTA performance)
+# Options:
+# - "all-MiniLM-L6-v2" (384d, fast, basic) - OLD
+# - "all-MiniLM-L12-v2" (384d, faster, better than L6) - RECOMMENDED for speed
+# - "all-mpnet-base-v2" (768d, better quality) - RECOMMENDED for quality
+# - "BAAI/bge-large-en-v1.5" (1024d, SOTA) - BEST quality but slower
+EMBEDDING_MODEL = "all-mpnet-base-v2"  # Changed from all-MiniLM-L6-v2 for better accuracy
+embeddings = SentenceTransformerEmbeddings(model_name=EMBEDDING_MODEL)
 
-# Text splitter
+# Text splitter (Improved overlap for better context preservation, matching rag.py)
 text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
-    chunk_size=512, chunk_overlap=50
+    chunk_size=1000,
+    chunk_overlap=250  # Increased from 50 to 250 for better context (matches rag.py)
 )
 
 # Create vector server with both sources
@@ -80,6 +87,11 @@ print("=" * 80)
 print(f"✓ Local files: ../data")
 print(f"✓ Google Drive folder: {GDRIVE_FOLDER_ID}")
 print(f"✓ Service account: {GDRIVE_SERVICE_ACCOUNT}")
+print(f"✓ Embedding model: {EMBEDDING_MODEL} (SOTA upgrade)")
+print(f"✓ Chunk size: 1000, overlap: 250 (improved context)")
+print("=" * 80)
+print("NOTE: This server only does RETRIEVAL (vector search).")
+print("Answer generation/LLM is handled separately in test_framework.py")
 print("=" * 80)
 
 vector_server.run_server(host="127.0.0.1", port=8745, threaded=True, with_cache=True)
